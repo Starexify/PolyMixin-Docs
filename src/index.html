@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="">
+    <title>PolyMixins</title>
+    <script type="module" src="ui.js" defer></script>
+    <link href="./output.css" rel="stylesheet">
+</head>
+
+<body class="bg-slate-800 text-white">
+
+<div class="flex min-h-screen">
+    <div class="w-1/5 bg-slate-900 px-10 h-screen sticky top-0">
+        <div class="mx-auto px-4 border-b  border-slate-600 mb-6">
+            <div class="flex justify-between items-center h-16">
+                <div class="font-bold">PolyMixin Documentation</div>
+            </div>
+        </div>
+
+        <div class="h-screen overflow-y-auto">
+            <ul id="sidebar" class="space-y-2 sticky top-0 "></ul>
+        </div>
+    </div>
+
+    <main class="flex-1 pt-8 px-16 mx-auto" id="content">
+        <h1 class="text-3xl font-bold mb-4">Welcome to PolyMixins Documentation</h1>
+        <p>Select a topic from the sidebar to see its content.</p>
+    </main>
+</div>
+
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+    const entries = [
+        {
+            id: 'getting-started',
+            title: 'Getting Started',
+            content: `
+<div class="flex flex-col gap-2">
+               <p class="text-3xl font-bold mb-4">Understanding PolyMixin</p>
+               <p class="text-2xl font-bold mb-2">What is PolyMixin ?</p>
+               <p>PolyMixin is a framework and API for V-Slice mods, built on <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree" class="text-blue-500 hover:underline hover:text-blue-500">AST</a> manipulation.
+It is inspired by the mixin pattern used in projects like Sponge Mixin (Minecraft), and allows modders to patch or extend scripted classes without modifying their original scripts.
+</p>
+</div>
+`
+        },
+        {
+            id: 'polymixin',
+            title: 'PolyMixin',
+            content: ``
+        },
+        {
+            id: 'functions',
+            title: 'Functions',
+            content: ``
+        },
+        {
+            id: 'examples',
+            title: 'Examples',
+            content: ``
+        }
+    ];
+
+    // Populate sidebar
+    const links = {};
+    entries.forEach(entry => {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = `#${entry.id}`;
+        link.textContent = entry.title;
+        link.className = "text-gray-400 hover:text-blue-500 transition-colors break-words whitespace-normal";
+        li.appendChild(link);
+        sidebar.appendChild(li);
+        links[entry.id] = link;
+    });
+
+    // Load an entry by ID
+    function loadEntry(id) {
+        const entry = entries.find(e => e.id === id);
+        if (!entry) return;
+
+        content.innerHTML = `
+        <h1 class="text-4xl font-bold pb-8">${entry.title}</h1>
+        <hr class="border-slate-600 mb-6">
+        ${entry.content}
+    `;
+
+        Object.values(links).forEach(link => {
+            link.classList.remove('text-blue-600', 'font-bold');
+            link.classList.add('text-gray-400');
+        });
+
+        // Highlight active link
+        const activeLink = links[id];
+        if (activeLink) {
+            activeLink.classList.add('text-blue-600', 'font-bold');
+            activeLink.classList.remove('text-gray-400');
+        }
+    }
+
+    // Load entry when hash changes
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.substring(1);
+        if (hash) loadEntry(hash);
+    });
+
+    // Load initial entry if hash exists
+    const initialHash = window.location.hash.substring(1);
+    if (initialHash) {
+        loadEntry(initialHash);
+    } else {
+        content.innerHTML = `<h1 class="text-3xl font-bold mb-4">Welcome to MyWiki</h1>
+                             <p>Select a topic from the sidebar to see its content.</p>`;
+    }
+</script>
+
+</body>
+</html>

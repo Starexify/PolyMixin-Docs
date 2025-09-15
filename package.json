@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.9",
+    "bun-plugin-tailwind": "^0.0.15",
+    "jsdom": "^26.1.0",
+    "node-fetch": "^3.3.2",
+    "tailwindcss": "^4.1.12"
+  },
+  "name": "polymixin",
+  "private": true,
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.12",
+    "@types/bun": "latest",
+    "live-server": "^1.2.2"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/tailwindcss -i ./src/input.css -o ./src/output.css --minify",
+    "watch-css": "./node_modules/.bin/tailwindcss -i ./src/input.css -o ./src/output.css --watch",
+    "serve": "./node_modules/.bin/live-server src --wait=200",
+    "dev": "bun run watch-css & bun run serve"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "module": "src/index.ts",
+  "type": "module"
+}
