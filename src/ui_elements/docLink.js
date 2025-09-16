@@ -1,6 +1,6 @@
 export class DocLink extends HTMLElement {
     connectedCallback() {
-        const href = this.getAttribute("href");  // get href from the custom tag
+        const href = this.getAttribute("href");
         const text = this.innerHTML.trim();
         const noTarget = this.hasAttribute("target-off");
         this.innerHTML = `

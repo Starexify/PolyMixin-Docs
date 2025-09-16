@@ -41,16 +41,16 @@
 <div class="flex flex-col gap-5">
                <p class="text-3xl font-bold mb-2">Understanding PolyMixin</p>
 
-               <p class="text-2xl font-bold">What is PolyMixin ?</p>
+               <p class="text-2xl font-bold -ml-2">What is PolyMixin ?</p>
                <p class="mb-4"><strong>PolyMixin</strong> is a <strong>framework and API</strong> for V-Slice mods, built on <doc-link href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</doc-link> manipulation.
 It is inspired by the mixin pattern used in projects like SpongePowered Mixin (Minecraft), and allows modders to patch or extend scripted classes without modifying their original scripts.</p>
 
-               <p class="text-2xl font-bold">How does it work ?</p>
+               <p class="text-2xl font-bold -ml-2">How does it work ?</p>
                <p>PolyMixin hooks into Polymod's scripting system by using the <code-field>PolymodScriptClass</code-field>(<code-field>_abs</code-field>) and modifying the <code-field>_cachedFunctionDecls</code-field> and <code-field>_cachedFieldDecls</code-field>.
                It replaces or transforms the function declarations (<code-field>FunctionDecl</code-field>) using the function declaration from another class, which is also a <code-field>PolymodScriptClass</code-field>.</p>
                <p class="mb-4">Think of it as "hot-swapping" functions at the AST level.</p>
 
-               <p class="text-2xl font-bold">Limitations ?</p>
+               <p class="text-2xl font-bold -ml-2">Limitations ?</p>
                <p>Currently, there are some limitations:</p>
                <ul class="list-disc ml-6 mb-4">
                  <li>Some transformations are applied later, because mixins may load before or after the base class (always check for PolyMixin and the original module’s availability before using it).</li>
@@ -65,7 +65,7 @@ It is inspired by the mixin pattern used in projects like SpongePowered Mixin (M
             title: 'Setting up PolyMixins',
             content: `
 <div class="flex flex-col gap-5">
-               <p class="text-2xl font-bold">Preparation</p>
+               <p class="text-2xl font-bold -ml-2">Preparation</p>
                <p>Before you start to use <strong>PolyMixins</strong>, you should have a basic understanding of scripting in V-Slice and how it works.</p>
                <div>
                  <p>If you are new to V-Slice modding, you may want to check out documentation and tutorials first.</p>
@@ -78,7 +78,7 @@ It is inspired by the mixin pattern used in projects like SpongePowered Mixin (M
                  <li><doc-link href="https://haxe.org/documentation/introduction/">Haxe Documentation</doc-link></li>
                </ul>
 
-              <p class="text-2xl font-bold">Installation</p>
+              <p class="text-2xl font-bold -ml-2">Installation</p>
               <p>
                To use <strong>PolyMixin</strong> in your project, make sure it is installed as a <strong>mod</strong> inside your Friday Night Funkin' mods folder.
                PolyMixin should be placed alongside your other mods so that it can patch and extend scripts during runtime.
@@ -89,7 +89,7 @@ It is inspired by the mixin pattern used in projects like SpongePowered Mixin (M
               </ul>
               <p class="mb-4">After installing, verify that PolyMixin loads correctly before attempting to use any mixin features in your own mods.</p>
 
-              <p class="text-2xl font-bold">Configuration</p>
+              <p class="text-2xl font-bold -ml-2">Configuration</p>
               <p>Now moving to the juicy stuff, configuration.
               PolyMixin gives you the possibility to add your own configuration for mixins to load when the game starts and after hot reloads.
               </p>
@@ -344,7 +344,45 @@ function newTest() {
         {
             id: 'injection-params',
             title: 'Injection Parameters',
-            content: `(WIP)`,
+            content: `
+<div class="flex flex-col gap-3">
+                <p class="mb-4">Injection Parameters define where and when mixins annotations or functions apply their injection.</p>
+
+                <p class="text-2xl font-bold -ml-2">Method (Target Method)</p>
+                <p class="mb-6">The <code-field>method</code-field> parameter specifies which method/function the mixin function will inject into.</p>
+
+                <p class="text-2xl font-bold -ml-2">At (Injection Point)</p>
+                <p>The <code-field>at</code-field> parameter specifies the point where the mixin function is injected.</p>
+                <p>Supported values:</p>
+                <ul class="list-disc space-y-1 ml-6 mb-6">
+                 <li><code-field>At.HEAD</code-field> / <code-field>"HEAD"</code-field> - injects at the beginning</li>
+                 <li><code-field>At.TAIL</code-field> / <code-field>"TAIL"</code-field> - injects at the bottom</li>
+                 <li><code-field>At.INVOKE</code-field> / <code-field>"INVOKE"</code-field> - injects at a specific method call <span class="text-sm">(can be used with <code-field>Shift</code-field>)</span></li>
+                 <li><code-field>At.RETURN</code-field> / <code-field>"RETURN"</code-field> - injects before <code-field>return</code-field></li>
+                </ul>
+
+                <p class="text-2xl font-bold -ml-2">Shift (Injection Positioning)</p>
+                <p>The <code-field>shift</code-field> parameter adjusts the position of an injection, most often with <code-field>At.INVOKE</code-field></p>
+                <p>Options:</p>
+                <ul class="list-disc space-y-1 ml-6 mb-6">
+                 <li><code-field>Shift.BEFORE</code-field> or <code-field>"BEFORE"</code-field> - before the injection point</li>
+                 <li><code-field>Shift.AFTER</code-field> or <code-field>"AFTER"</code-field> - after the injection point</li>
+                </ul>
+
+                <p class="text-2xl font-bold -ml-2">Target (Injection Target)</p>
+                <p class="mb-6">The <code-field>target</code-field> parameter defines the specific method or instruction the mixin should inject into. Mainly used alongside <code-field>At.INVOKE</code-field>.</p>
+
+                <p class="text-2xl font-bold -ml-2">Ordinal</p>
+                <p>The <code-field>ordinal</code-field> parameter selects which occurrence of a target to inject into. Usually used with a <code-field>Target</code-field> but can sometimes be used with <code-field>At.RETURN</code-field>.</p>
+                <ul class="list-disc space-y-1 ml-6 mb-6">
+                 <li><code-field>-1</code-field> - inject at every matching target</li>
+                 <li><code-field>0</code-field> or higher - inject at that specific index</li>
+                </ul>
+
+                <p class="text-2xl font-bold -ml-2">Call</p>
+                <p class="mb-6">The <code-field>call</code-field> parameter specifies the function call where the mixin function will be applied. Mainly used alongside <doc-link href="#annotations:modify-return" target-off>@:ModifyReturn</doc-link> & <doc-link href="#annotations:modify-expression" target-off>@:ModifyExpression</doc-link>.</p>
+</div>
+`,
             subsections: []
         },
         {
@@ -377,7 +415,9 @@ function newTest() {
                 {
                     id: 'mixin-class',
                     title: 'Mixin Classes',
-                    content: `(WIP)`
+                    content: `
+<div class="flex flex-col gap-3">(WIP)</div>
+`
                 }
             ]
         }

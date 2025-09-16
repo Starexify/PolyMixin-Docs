@@ -1,8 +1,8 @@
-import {CodeField} from "./ui_elements/field.js";
+import {CodeField} from "./ui_elements/codeField.js";
 import {CodeBlock} from "./ui_elements/codeBlock.js";
 import {TipBlock} from "./ui_elements/tipBlock.js";
-import {DocLink} from "./ui_elements/docLink.js";
 import {NoteBlock} from "./ui_elements/noteBlock.js";
+import {DocLink} from "./ui_elements/docLink.js";
 
 window.customElements.define('tip-block', TipBlock);
 window.customElements.define('note-block', NoteBlock);
