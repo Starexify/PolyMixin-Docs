@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="">
-    <title>PolyMixins</title>
+    <title>PolyMixin Docs</title>
     <script type="module" src="ui.js" defer></script>
     <link href="./output.css" rel="stylesheet">
 </head>
@@ -13,7 +13,7 @@
 
 <div class="md:flex min-h-screen">
     <aside class="bg-slate-900 md:flex flex-col sticky top-0 h-screen p-4 transform -translate-x-full md:translate-x-0 hidden md:translate-visible transition-transform duration-300">
-    <div class="px-4 border-b border-slate-600 h-16 flex justify-center items-center font-bold bg-slate-900 z-10 sticky top-0">
+        <div class="px-4 border-b border-slate-600 h-16 flex justify-center items-center font-bold bg-slate-900 z-10 sticky top-0">
             PolyMixin Documentation
         </div>
 
@@ -62,7 +62,7 @@ It is inspired by the mixin pattern used in projects like SpongePowered Mixin (M
         },
         {
             id: 'setup',
-            title: 'Setup up PolyMixins',
+            title: 'Setting up PolyMixins',
             content: `
 <div class="flex flex-col gap-5">
                <p class="text-2xl font-bold">Preparation</p>
@@ -120,34 +120,232 @@ override public function onCreate(event:ScriptEvent) {
         {
             id: 'annotations',
             title: 'Annotations',
-            content: ``,
+            content: `<note-block>Annotations only work if you use a polymixin config file or handle them yourself using the MixinAnnotationProcessor.</note-block>`,
             subsections: [
                 {
                     id: 'overwrite',
                     title: '@:Overwrite',
-                    content: `(WIP)`
+                    content: `
+<div class="flex flex-col gap-2">
+                    <p>There are many ways to overwrite functions using mixins, and one of them is by using the <code-field>@:Overwrite</code-field> annotation.</p>
+                    <p>So let's take for example the following snippet of a script:</p>
+                    <code-block language="haxe">
+public function test() {
+    trace("test() called");
+}
+                    </code-block>
+                    <p>If you need to overwrite that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+                    <code-block language="haxe">
+@:Overwrite(method = "test")
+function testOverwrite() {
+    trace("Overwrote test()");
+}
+                    </code-block>
+</div>
+                    `
                 },
                 {
                     id: 'inject',
                     title: '@:Inject',
-                    content: `(WIP)`
+                    content: `
+<div class="flex flex-col gap-2">
+                    <p>There are many ways to inject into functions using mixins, and one of them is by using the <code-field>@:Inject</code-field> annotation.</p>
+                    <p class="mb-4">But choose carefully because there are many types of injection such as:</p>
+
+                    <div class="flex flex-col space-y-3">
+                      <p class="font-bold text-xl">Injecting at the HEAD of a function</p>
+                      <p>So let's take for example the following snippet of a script:</p>
+                      <code-block language="haxe">
+public function test() {
+    trace("test() called");
+}
+                      </code-block>
+                      <p>If you need to inject code into that function at the beginning here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+                      <code-block language="haxe">
+@:Inject(method = "test", at = "HEAD")
+function testInject() {
+    trace("Injected into test() at HEAD");
+}
+                      </code-block>
+                      <p>The function would look like this after the injection:</p>
+                      <code-block language="haxe">
+public function test() {
+    trace("Injected into test() at HEAD");
+    trace("test() called");
+}
+                      </code-block>
+
+                      <p class="font-bold text-xl mt-4">Injecting at the RETURN of a function</p>
+                      <p>Now let's take another example:</p>
+                      <code-block language="haxe">
+public function test() {
+    doSomething();
+    return trace("Test Return");
+}
+                      </code-block>
+                      <p>If you need to inject code into that function before the return here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+                      <code-block language="haxe">
+@:Inject(method = "test", at = "RETURN")
+function testInject() {
+    trace("Injected into test() at RETURN");
+}
+                      </code-block>
+                      <p>The function would look like this after the injection:</p>
+                      <code-block language="haxe">
+public function test() {
+    doSomething();
+    trace("Injected into test() at RETURN");
+    return trace("Test Return");
+}
+                      </code-block>
+
+                      <p class="font-bold text-xl mt-4">Injecting at a target inside the function using INVOKE</p>
+                      <p>And the last example:</p>
+                      <code-block language="haxe">
+public function test() {
+    trace("test() called");
+    doSomething();
+    doSomething();
+    trace("test() called x2");
+}
+                      </code-block>
+                      <p>If you need to inject code into that function before doSomething() here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+                      <code-block language="haxe">
+@:Inject(method = "test", at = "INVOKE", target = "doSomething")
+function testInject() {
+    trace("Injected into test() before doSomething()");
+}
+                      </code-block>
+                      <p>The function would look like this after the injection:</p>
+                      <code-block language="haxe">
+public function test() {
+    trace("test() called");
+    trace("Injected into test() before doSomething()");
+    doSomething();
+    doSomething();
+    trace("test() called x2");
+}
+                      </code-block>
+
+                      <tip-block>
+                        Injection behavior depends on the annotation parameters you use.
+                        <p class="text-gray-400 text-sm">See <doc-link href="#injection-params" target-off>Injection Parameters</doc-link> for more information.</p>
+                      </tip-block>
+                    </div>
+</div>
+                    `
                 },
                 {
                     id: 'modify-return',
                     title: '@:ModifyReturn',
-                    content: `(WIP)`
+                    content: `
+<div class="flex flex-col gap-2">
+                    <p>There are many ways to modify the return call of a function using mixins, and one of them is by using the <code-field>@:ModifyReturn</code-field> annotation.</p>
+                    <p>Let's take for example the following snippet of a script:</p>
+                    <code-block language="haxe">
+public function test() {
+    return 20;
+}
+                    </code-block>
+                    <p>If you need to modify the return call of that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+                    <code-block language="haxe">
+@:ModifyReturn(method = "test", call = testReturnCall)
+function testReturn(original:Int) {
+    return original + 10;
+}
+
+function testReturnCall(original:Int) {
+    testReturn(original);
+}
+                    </code-block>
+
+                    &nbsp;
+                    <note-block>The Call function is required for the modified return to work !</note-block>
+                    <p></p>
+                    <p>And the function would look like this after the modification:</p>
+                    <code-block language="haxe">
+public function test() {
+    return testReturnCall(20 + 10);
+}
+                    </code-block>
+</div>
+                    `
                 },
                 {
                     id: 'modify-expression',
                     title: '@:ModifyExpression',
-                    content: `(WIP)`
+                    content: `
+<div class="flex flex-col gap-2">
+                    <p>There are many ways to modify the expression call of a function using mixins, and one of them is by using the <code-field>@:ModifyExpression</code-field> annotation.</p>
+                    <p>Let's take for example the following snippet of a script:</p>
+                    <code-block language="haxe">
+public function test() {
+    if (true) trace(true);
+    if (false) trace(false);
+    if (true) trace("true x2");
+    if (true) trace("true x3");
+}
+                    </code-block>
+                    <p>If you need to modify the return call of that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+                    <code-block language="haxe">
+@:ModifyExpression(method = "test", call = testExprCall, target = true, ordinal = 0)
+function testExpr(original:Bool) {
+    return false;
+}
+
+function testExprCall(original:Bool) {
+    testExpr(original);
+}
+                    </code-block>
+
+                    &nbsp;
+                    <note-block>The Call function is required for the modified expression to work !</note-block>
+                    <p></p>
+                    <p>And the function would look like this after the modification:</p>
+                    <code-block language="haxe">
+public function test() {
+    if (testExprCall(testExpr(true))) trace(true);
+    if (false) trace(false);
+    if (true) trace("true x2");
+    if (true) trace("true x3");
+}
+                    </code-block>
+                    <tip-block>
+                      Injection behavior depends on the annotation parameters you use.
+                      <p class="text-gray-400 text-sm">See <doc-link href="#injection-params" target-off>Injection Parameters</doc-link> for more information.</p>
+                    </tip-block>
+</div>
+                    `
                 },
                 {
                     id: 'inject-function',
                     title: '@:InjectFunction',
-                    content: `(WIP)`
+                    content: `
+<div class="flex flex-col gap-2">
+                    <p>There are many ways to inject a function using mixins, and one of them is by using the <code-field>@:InjectFunction</code-field> annotation.</p>
+                    <p>So let's take for example you need a function inside a class, here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link> for that:</p>
+                    <code-block language="haxe">
+@:InjectFunction
+function newTest() {
+    trace("newTest() function injected");
+}
+                    </code-block>
+                    <p>The class would now have this function and can be used:</p>
+                    <code-block language="haxe">
+function newTest() {
+    trace("newTest() function injected");
+}
+                     </code-block>
+</div>
+                    `
                 }
             ]
+        },
+        {
+            id: 'injection-params',
+            title: 'Injection Parameters',
+            content: `(WIP)`,
+            subsections: []
         },
         {
             id: 'classes',
@@ -174,8 +372,14 @@ override public function onCreate(event:ScriptEvent) {
         {
             id: 'examples',
             title: 'Examples',
-            content: `(WIP)`,
-            subsections: []
+            content: ``,
+            subsections: [
+                {
+                    id: 'mixin-class',
+                    title: 'Mixin Classes',
+                    content: `(WIP)`
+                }
+            ]
         }
     ];
 
@@ -237,8 +441,10 @@ override public function onCreate(event:ScriptEvent) {
 
         sidebar.appendChild(li);
         links[entry.id] = button;
-        if (entry.subsections.length > 0) entry.subsections.forEach(sub => { flatEntries.push({ id: `${entry.id}:${sub.id}`, title: sub.title }); });
-        else flatEntries.push({ id: entry.id, title: entry.title });
+        if (entry.subsections.length > 0) entry.subsections.forEach(sub => {
+            flatEntries.push({id: `${entry.id}:${sub.id}`, title: sub.title});
+        });
+        else flatEntries.push({id: entry.id, title: entry.title});
     });
 
     // Load an entry by ID
@@ -255,16 +461,16 @@ override public function onCreate(event:ScriptEvent) {
 
         if (subsectionId) {
             const sub = section.subsections.find(s => s.id === subsectionId);
-            if (sub) html += `<h2 class="text-2xl font-bold mt-6 mb-2">${sub.title}</h2>${sub.content}`;
+            if (sub) html += `<h2 class="text-2xl font-bold mt-10 mb-3">${sub.title}</h2>${sub.content}`;
         }
 
         html += `<div class="flex justify-center mt-8 md:mx-10 gap-4">
             <button id="prevSection" class="flex-1 flex flex-col items-start min-w-0 border border-slate-600 hover:border-blue-500 py-2 px-4 rounded-xl hover:cursor-pointer disabled:opacity-0">
-                <span class="text-sm font-semibold">Previous</span>
+                <span class="text-sm font-semibold">← Previous</span>
                 <span id="prevId" class="text-blue-500 mt-1 truncate block max-w-full"></span>
             </button>
             <button id="nextSection" class="flex-1 flex flex-col items-end min-w-0 border border-slate-600 hover:border-blue-500 py-2 px-4 rounded-xl hover:cursor-pointer disabled:opacity-0">
-                <span class="text-sm font-semibold">Next</span>
+                <span class="text-sm font-semibold">Next →</span>
                 <span id="nextId" class="text-blue-500 mt-1 truncate block max-w-full"></span>
             </button>
         </div>`;

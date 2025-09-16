@@ -16,15 +16,20 @@ export class CodeBlock extends HTMLElement {
 
         pre.appendChild(code);
 
+        const langLabel = document.createElement('div');
+        langLabel.textContent = language;
+        langLabel.className = 'absolute top-1 right-1 text-slate-500 px-2 py-0.5 text-xs font-semibold opacity-70 select-none transition-opacity duration-300 group-hover:opacity-0';
+        pre.appendChild(langLabel);
+
         // Clear and add the formatted code
         this.innerHTML = '';
         this.appendChild(pre);
 
         // Add copy button
-        this.addCopyButton(text);
+        this.addCopyButton(pre, text);
     }
 
-    addCopyButton(originalText) {
+    addCopyButton(pre, originalText) {
         const copyButton = document.createElement('button');
         copyButton.className = 'absolute top-2 right-2 bg-slate-700 hover:bg-slate-600 text-gray-300 hover:text-white p-1 rounded text-xs font-medium transition-colors opacity-0 hover:cursor-pointer group-hover:opacity-100';
 
@@ -33,15 +38,15 @@ export class CodeBlock extends HTMLElement {
         copyIcon.setAttribute("fill", "none");
         copyIcon.setAttribute("stroke", "currentColor");
         copyIcon.setAttribute("stroke-width", "1.5");
-        copyIcon.setAttribute("class", "size-5");
+        copyIcon.setAttribute("class", "size-7");
         copyIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"></path>`;
 
         const checkIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         checkIcon.setAttribute("viewBox", "0 0 24 24");
         checkIcon.setAttribute("fill", "none");
-        checkIcon.setAttribute("stroke", "currentColor");
+        checkIcon.setAttribute("stroke", "#28b128");
         checkIcon.setAttribute("stroke-width", "1.5");
-        checkIcon.setAttribute("class", "size-5 text-green-500");
+        checkIcon.setAttribute("class", "size-7");
         checkIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>`;
 
         copyButton.appendChild(copyIcon);
@@ -59,8 +64,8 @@ export class CodeBlock extends HTMLElement {
         });
 
         // Make parent relative and add group class for hover effect
-        this.classList.add('relative', 'group');
-        this.appendChild(copyButton);
+        pre.classList.add('relative', 'group');
+        pre.appendChild(copyButton);
     }
 }
 
@@ -83,10 +88,10 @@ class SyntaxHighlighter {
         numbers: /\b\d+(?:\.\d+)?\b/g,
 
         // Functions/Methods
-        functions: /\b([a-zA-Z_][a-zA-Z0-9_]*)\s*(?=\()/g,
+        functions: /\b(?!if\b|for\b|while\b|switch\b|catch\b|else\b|return\b|function\b)([a-zA-Z_][a-zA-Z0-9_]*)\s*(?=\()/g,
 
         // Annotations/Metadata
-        annotations: /@:?[a-zA-Z_][a-zA-Z0-9_]*/g,
+        annotations: /@:[a-zA-Z_][a-zA-Z0-9_]*|\(|\)/g,
 
         // Operators
         operators: /[+\-*\/=<>!&|%^~?:]+/g,
@@ -106,40 +111,52 @@ class SyntaxHighlighter {
         let highlighted = code;
         const tokens = [];
 
-        // Process in order of precedence
+        /// Process in order of precedence
+        // Comments
         highlighted = highlighted.replace(this.haxeTokens.comments, (match, offset) => {
             const id = `__COMMENT_${tokens.length}__`;
             tokens.push({ id, replacement: `<span class="text-gray-500">${this.escapeHtml(match)}</span>` });
             return id;
         });
 
-        highlighted = highlighted.replace(this.haxeTokens.strings, (match, offset) => {
+        // Annotations
+        highlighted = highlighted.replace(/@:[a-zA-Z_][a-zA-Z0-9_]*\([^\)]*\)/g, (match) => {
+            const id = `__ANNOTATION_${tokens.length}__`;
+
+            // Optional: color name vs parentheses differently
+            const nameMatch = match.match(/^@:[a-zA-Z_][a-zA-Z0-9_]*/)[0];
+            const parensMatch = match.slice(nameMatch.length);
+
+            const replacement = `<span class="text-red-400">${this.escapeHtml(nameMatch)}</span>${this.escapeHtml(parensMatch)}`;
+            tokens.push({ id, replacement });
+            return id;
+        });
+
+        // Strings
+        highlighted = highlighted.replace(this.haxeTokens.strings, (match) => {
             const id = `__STRING_${tokens.length}__`;
             tokens.push({ id, replacement: `<span class="text-cyan-200">${this.escapeHtml(match)}</span>` });
             return id;
         });
 
-        highlighted = highlighted.replace(this.haxeTokens.annotations, (match, offset) => {
-            const id = `__ANNOTATION_${tokens.length}__`;
-            tokens.push({ id, replacement: `<span class="text-yellow-400">${this.escapeHtml(match)}</span>` });
+        // Function
+        highlighted = highlighted.replace(this.haxeTokens.functions, (match, offset) => {
+            const id = `__FUNCTION_${tokens.length}__`;
+            tokens.push({ id, replacement: `<span class="text-purple-400">${this.escapeHtml(match)}</span>` });
             return id;
         });
 
+        // Keywords
         highlighted = highlighted.replace(this.haxeTokens.keywords, (match, offset) => {
             const id = `__KEYWORD_${tokens.length}__`;
             tokens.push({ id, replacement: `<span class="text-red-400 font-semibold">${this.escapeHtml(match)}</span>` });
             return id;
         });
 
+        // Types
         highlighted = highlighted.replace(this.haxeTokens.types, (match, offset) => {
             const id = `__TYPE_${tokens.length}__`;
             tokens.push({ id, replacement: `<span class="text-amber-500">${this.escapeHtml(match)}</span>` });
-            return id;
-        });
-
-        highlighted = highlighted.replace(this.haxeTokens.functions, (match, offset) => {
-            const id = `__FUNCTION_${tokens.length}__`;
-            tokens.push({ id, replacement: `<span class="text-purple-400">${this.escapeHtml(match)}</span>` });
             return id;
         });
 
@@ -161,10 +178,7 @@ class SyntaxHighlighter {
             return id;
         });
 
-        // Escape remaining HTML and restore tokens
         highlighted = this.escapeHtml(highlighted);
-
-        // Replace tokens with highlighted versions
         tokens.forEach(token => {
             highlighted = highlighted.replace(new RegExp(token.id, 'g'), token.replacement);
         });
