@@ -7,6 +7,10 @@
     <title>PolyMixins</title>
     <script type="module" src="ui.js" defer></script>
     <link href="./output.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 </head>
 
 <body class="bg-slate-800 text-white">
@@ -22,7 +26,7 @@
         </div>
     </aside>
 
-    <main class="flex-1 pt-8 px-16" id="content">
+    <main class="flex-1 py-8 px-16" id="content">
         <h1 class="text-3xl font-bold mb-4">Welcome to PolyMixins Documentation</h1>
         <p>Select a topic from the sidebar to see its content.</p>
     </main>
@@ -36,16 +40,16 @@
             id: 'getting-started',
             title: 'Getting Started',
             content: `
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-5">
                <p class="text-3xl font-bold mb-2">Understanding PolyMixin</p>
 
                <p class="text-2xl font-bold">What is PolyMixin ?</p>
-               <p class="mb-4"><strong>PolyMixin</strong> is a <strong>framework and API</strong> for V-Slice mods, built on <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree" class="text-blue-500 hover:underline hover:text-blue-500">AST</a> manipulation.
-It is inspired by the mixin pattern used in projects like Sponge Mixin (Minecraft), and allows modders to patch or extend scripted classes without modifying their original scripts.</p>
+               <p class="mb-4"><strong>PolyMixin</strong> is a <strong>framework and API</strong> for V-Slice mods, built on <doc-link href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</doc-link> manipulation.
+It is inspired by the mixin pattern used in projects like SpongePowered Mixin (Minecraft), and allows modders to patch or extend scripted classes without modifying their original scripts.</p>
 
                <p class="text-2xl font-bold">How does it work ?</p>
-               <p>PolyMixin hooks into Polymod's scripting system by using the <code-field>PolymodScriptClass</code-field>(_abs) and modifying the _cachedFunctionDecls and _cachedFieldDecls.
-               It replaces or transforms the function declarations (FunctionDecl) using the function declaration from another class, which is also a PolymodScriptClass.</p>
+               <p>PolyMixin hooks into Polymod's scripting system by using the <code-field>PolymodScriptClass</code-field>(<code-field>_abs</code-field>) and modifying the <code-field>_cachedFunctionDecls</code-field> and <code-field>_cachedFieldDecls</code-field>.
+               It replaces or transforms the function declarations (<code-field>FunctionDecl</code-field>) using the function declaration from another class, which is also a <code-field>PolymodScriptClass</code-field>.</p>
                <p class="mb-4">Think of it as "hot-swapping" functions at the AST level.</p>
 
                <p class="text-2xl font-bold">Limitations ?</p>
@@ -54,6 +58,61 @@ It is inspired by the mixin pattern used in projects like Sponge Mixin (Minecraf
                  <li>Some transformations are applied later, because mixins may load before or after the base class (always check for PolyMixin and the original module’s availability before using it).</li>
                  <li>Lack of testing in actual mods use cases, so behavior may be unpredictable.</li>
                </ul>
+</div>
+`,
+            subsections: []
+        },
+        {
+            id: 'setup',
+            title: 'Setup up Mixin',
+            content: `
+<div class="flex flex-col gap-5">
+               <p class="text-2xl font-bold">Preparation</p>
+               <p>Before you start to use <strong>PolyMixins</strong>, you should have a basic understanding of scripting in V-Slice and how it works.</p>
+               <div>
+                 <p>If you are new to V-Slice modding, you may want to check out documentation and tutorials first.</p>
+                 <p>Here are some resources to get you started:</p>
+               </div>
+               <ul class="list-disc ml-6 mb-4 font-bold">
+                 <li><doc-link href="https://funkincrew.github.io/funkin-modding-docs/">Friday Night Funkin' Modding Documentation</doc-link></li>
+                 <li><doc-link href="https://thekade.net/funkin-cookbook/">Friday Night Funkin' Cookbook</doc-link></li>
+                 <li><doc-link href="https://polymod.io/docs/">Polymod Documentation</doc-link></li>
+                 <li><doc-link href="https://haxe.org/documentation/introduction/">Haxe Documentation</doc-link></li>
+               </ul>
+
+              <p class="text-2xl font-bold">Installation</p>
+              <p>
+               To use <strong>PolyMixin</strong> in your project, make sure it is installed as a <strong>mod</strong> inside your Friday Night Funkin' mods folder.
+               PolyMixin should be placed alongside your other mods so that it can patch and extend scripts during runtime.
+              </p>
+              <p>You can download PolyMixin from:</p>
+              <ul class="list-disc ml-6 font-bold">
+                 <li><doc-link href="https://github.com/Starexify/PolyMixin/tree/main">Official GitHub Repo</doc-link></li>
+               </ul>
+              <p class="mb-4">After installing, verify that PolyMixin loads correctly before attempting to use any mixin features in your own mods.</p>
+
+              <p class="text-2xl font-bold">Configuration</p>
+              <p>Now moving to the juicy stuff, configuration.
+              PolyMixin gives you the possibility to add your own configuration for mixins to load when the game starts and after hot reloads.
+              </p>
+              <p>First you need a mixin configuration file. <span class="text-red-700 font-bold">Important!</span> <strong>The file should be placed in <code-field>mods/YourMod/_polymixin_config.json</code-field></strong></p>
+              <p>An example of how a configuration file can look like:</p>
+              <code-block language="json">
+{
+  "mixins": [
+    { "className": "ExampleSongMixin", "kind": "Song", "params": { "id": "testing", "variation": "default" } },
+    { "className": "ExampleModuleMixin", "kind": "Mixin" },
+    "BoyfriendMixin"
+  ]
+}
+              </code-block>
+              <p>After adding the configuration file all you need to do for this is add this line in the <code-field>onCreate</code-field> event:</p>
+              <code-block language="haxe">
+override public function onCreate(event:ScriptEvent) {
+    Mixins.addConfig("ModID"); // The ModID is the path to your mod's folder, for example "PolyMixin"
+}
+              </code-block>
+              <p>For more information about configuration, check out the <doc-link href="#classes:mixins" target-off>Mixins</doc-link> class.</p>
 </div>
 `,
             subsections: []
@@ -91,10 +150,26 @@ It is inspired by the mixin pattern used in projects like Sponge Mixin (Minecraf
             ]
         },
         {
-            id: 'functions',
-            title: 'Functions',
-            content: `(WIP)`,
-            subsections: []
+            id: 'classes',
+            title: 'Classes',
+            content: ``,
+            subsections: [
+                {
+                    id: 'polymixin',
+                    title: 'PolyMixin',
+                    content: `(WIP)`
+                },
+                {
+                    id: 'mixin-annotation-proc',
+                    title: 'MixinAnnotationProcessor',
+                    content: `(WIP)`
+                },
+                {
+                    id: 'mixins',
+                    title: 'Mixins',
+                    content: `(WIP)`
+                }
+            ]
         },
         {
             id: 'examples',
@@ -118,10 +193,10 @@ It is inspired by the mixin pattern used in projects like Sponge Mixin (Minecraf
 
         if (entry.subsections.length) {
             // Create transitionable arrow
-            const arrow = document.createElementNS("http://www.w3.org/2000/svg","svg");
-            arrow.setAttribute("class","w-3 h-3 transition-transform duration-200");
-            arrow.setAttribute("viewBox","0 0 10 6");
-            arrow.setAttribute("fill","none");
+            const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            arrow.setAttribute("class", "w-3 h-3 transition-transform duration-200 -rotate-90");
+            arrow.setAttribute("viewBox", "0 0 10 6");
+            arrow.setAttribute("fill", "none");
             arrow.innerHTML = `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l4 4 4-4"/>`;
             button.appendChild(arrow);
 
@@ -142,8 +217,19 @@ It is inspired by the mixin pattern used in projects like Sponge Mixin (Minecraf
             li.appendChild(subUl);
 
             button.addEventListener('click', () => {
+                const isHidden = subUl.classList.contains('hidden');
                 subUl.classList.toggle('hidden');
-                arrow.classList.toggle('rotate-360');
+
+                // Toggle arrow rotation: closed (-rotate-90) <-> open (rotate-0)
+                if (isHidden) {
+                    // Opening: rotate from right to down
+                    arrow.classList.remove('-rotate-90');
+                    arrow.classList.add('rotate-0');
+                } else {
+                    // Closing: rotate from down to right
+                    arrow.classList.remove('rotate-0');
+                    arrow.classList.add('-rotate-90');
+                }
             });
         } else {
             button.addEventListener('click', () => {
@@ -188,15 +274,16 @@ It is inspired by the mixin pattern used in projects like Sponge Mixin (Minecraf
         // Open parent section if subsection is active
         if (subsectionId) {
             const parentUl = activeLink.closest('ul');
-            if (parentUl) parentUl.classList.remove('hidden');
+            if (parentUl) {
+                parentUl.classList.remove('hidden');
 
-            const parentButton = parentUl.previousElementSibling;
-            const arrowSvg = parentButton.querySelector('svg');
-            if (arrowSvg) arrowSvg.classList.add('rotate-270');
-        } else {
-            const sectionButton = links[sectionId];
-            if (sectionButton && sectionButton.querySelector('svg')) {
-                sectionButton.querySelector('svg').classList.add('rotate-270');
+                // Make sure arrow points down when opened
+                const parentButton = parentUl.previousElementSibling;
+                const arrowSvg = parentButton.querySelector('svg');
+                if (arrowSvg) {
+                    arrowSvg.classList.remove('-rotate-90');
+                    arrowSvg.classList.add('rotate-0');
+                }
             }
         }
     }
