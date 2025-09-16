@@ -12,19 +12,17 @@
 <body class="bg-slate-800 text-white">
 
 <div class="flex min-h-screen">
-    <div class="w-1/5 bg-slate-900 px-10 h-screen sticky top-0">
-        <div class="mx-auto px-4 border-b  border-slate-600 mb-6">
-            <div class="flex justify-between items-center h-16">
-                <div class="font-bold">PolyMixin Documentation</div>
-            </div>
+    <aside class="w-1/5 bg-slate-900 flex flex-col sticky top-0 h-screen">
+        <div class="px-4 border-b border-slate-600 h-16 flex items-center font-bold bg-slate-900 z-10 sticky top-0">
+            PolyMixin Documentation
         </div>
 
-        <div class="h-screen overflow-y-auto">
-            <ul id="sidebar" class="space-y-2 sticky top-0 "></ul>
+        <div class="flex-1 overflow-y-auto mt-2">
+            <ul id="sidebar" class="space-y-2 px-4"></ul>
         </div>
-    </div>
+    </aside>
 
-    <main class="flex-1 pt-8 px-16 mx-auto" id="content">
+    <main class="flex-1 pt-8 px-16" id="content">
         <h1 class="text-3xl font-bold mb-4">Welcome to PolyMixins Documentation</h1>
         <p>Select a topic from the sidebar to see its content.</p>
     </main>
@@ -38,83 +36,174 @@
             id: 'getting-started',
             title: 'Getting Started',
             content: `
-<div class="flex flex-col gap-2">
-               <p class="text-3xl font-bold mb-4">Understanding PolyMixin</p>
-               <p class="text-2xl font-bold mb-2">What is PolyMixin ?</p>
-               <p>PolyMixin is a framework and API for V-Slice mods, built on <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree" class="text-blue-500 hover:underline hover:text-blue-500">AST</a> manipulation.
-It is inspired by the mixin pattern used in projects like Sponge Mixin (Minecraft), and allows modders to patch or extend scripted classes without modifying their original scripts.
-</p>
+<div class="flex flex-col gap-4">
+               <p class="text-3xl font-bold mb-2">Understanding PolyMixin</p>
+
+               <p class="text-2xl font-bold">What is PolyMixin ?</p>
+               <p class="mb-4"><strong>PolyMixin</strong> is a <strong>framework and API</strong> for V-Slice mods, built on <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree" class="text-blue-500 hover:underline hover:text-blue-500">AST</a> manipulation.
+It is inspired by the mixin pattern used in projects like Sponge Mixin (Minecraft), and allows modders to patch or extend scripted classes without modifying their original scripts.</p>
+
+               <p class="text-2xl font-bold">How does it work ?</p>
+               <p>PolyMixin hooks into Polymod's scripting system by using the <code-field>PolymodScriptClass</code-field>(_abs) and modifying the _cachedFunctionDecls and _cachedFieldDecls.
+               It replaces or transforms the function declarations (FunctionDecl) using the function declaration from another class, which is also a PolymodScriptClass.</p>
+               <p class="mb-4">Think of it as "hot-swapping" functions at the AST level.</p>
+
+               <p class="text-2xl font-bold">Limitations ?</p>
+               <p>Currently, there are some limitations:</p>
+               <ul class="list-disc ml-6 mb-4">
+                 <li>Some transformations are applied later, because mixins may load before or after the base class (always check for PolyMixin and the original module’s availability before using it).</li>
+                 <li>Lack of testing in actual mods use cases, so behavior may be unpredictable.</li>
+               </ul>
 </div>
-`
+`,
+            subsections: []
         },
         {
-            id: 'polymixin',
-            title: 'PolyMixin',
-            content: ``
+            id: 'annotations',
+            title: 'Annotations',
+            content: ``,
+            subsections: [
+                {
+                    id: 'overwrite',
+                    title: '@:Overwrite',
+                    content: `(WIP)`
+                },
+                {
+                    id: 'inject',
+                    title: '@:Inject',
+                    content: `(WIP)`
+                },
+                {
+                    id: 'modify-return',
+                    title: '@:ModifyReturn',
+                    content: `(WIP)`
+                },
+                {
+                    id: 'modify-expression',
+                    title: '@:ModifyExpression',
+                    content: `(WIP)`
+                },
+                {
+                    id: 'inject-function',
+                    title: '@:InjectFunction',
+                    content: `(WIP)`
+                }
+            ]
         },
         {
             id: 'functions',
             title: 'Functions',
-            content: ``
+            content: `(WIP)`,
+            subsections: []
         },
         {
             id: 'examples',
             title: 'Examples',
-            content: ``
+            content: `(WIP)`,
+            subsections: []
         }
     ];
 
-    // Populate sidebar
     const links = {};
+
+    // Populate sidebar with entries
     entries.forEach(entry => {
         const li = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = `#${entry.id}`;
-        link.textContent = entry.title;
-        link.className = "text-gray-400 hover:text-blue-500 transition-colors break-words whitespace-normal";
-        li.appendChild(link);
+
+        const button = document.createElement('button');
+        button.className = "flex items-center justify-between w-full text-left text-gray-400 hover:text-blue-500 py-2 transition-colors font-medium gap-2";
+        button.textContent = entry.title;
+
+        li.appendChild(button);
+
+        if (entry.subsections.length) {
+            // Create transitionable arrow
+            const arrow = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            arrow.setAttribute("class","w-3 h-3 transition-transform duration-200");
+            arrow.setAttribute("viewBox","0 0 10 6");
+            arrow.setAttribute("fill","none");
+            arrow.innerHTML = `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l4 4 4-4"/>`;
+            button.appendChild(arrow);
+
+            const subUl = document.createElement('ul');
+            subUl.className = "ml-4 space-y-1 hidden";
+
+            entry.subsections.forEach(sub => {
+                const subLi = document.createElement('li');
+                const subLink = document.createElement('a');
+                subLink.href = `#${entry.id}:${sub.id}`;
+                subLink.textContent = sub.title;
+                subLink.className = "block text-gray-400 hover:text-blue-500 text-sm";
+                subLi.appendChild(subLink);
+                subUl.appendChild(subLi);
+                links[`${entry.id}:${sub.id}`] = subLink;
+            });
+
+            li.appendChild(subUl);
+
+            button.addEventListener('click', () => {
+                subUl.classList.toggle('hidden');
+                arrow.classList.toggle('rotate-360');
+            });
+        } else {
+            button.addEventListener('click', () => {
+                window.location.hash = entry.id;
+            });
+        }
+
         sidebar.appendChild(li);
-        links[entry.id] = link;
+        links[entry.id] = button;
     });
 
     // Load an entry by ID
-    function loadEntry(id) {
-        const entry = entries.find(e => e.id === id);
-        if (!entry) return;
+    function loadEntry(hash) {
+        if (!hash) return;
+        const [sectionId, subsectionId] = hash.split(':');
+        const section = entries.find(e => e.id === sectionId);
+        if (!section) return;
 
-        content.innerHTML = `
-        <h1 class="text-4xl font-bold pb-8">${entry.title}</h1>
-        <hr class="border-slate-600 mb-6">
-        ${entry.content}
-    `;
+        let html = `<h1 class="text-4xl font-bold pb-8">${section.title}</h1>
+              <hr class="border-slate-600 mb-6">
+              ${section.content}`;
 
+        if (subsectionId) {
+            const sub = section.subsections.find(s => s.id === subsectionId);
+            if (sub) html += `<h2 class="text-2xl font-bold mt-6 mb-2">${sub.title}</h2>${sub.content}`;
+        }
+
+        content.innerHTML = html;
+
+        // Highlight section
         Object.values(links).forEach(link => {
             link.classList.remove('text-blue-600', 'font-bold');
             link.classList.add('text-gray-400');
         });
 
-        // Highlight active link
-        const activeLink = links[id];
+        const activeLink = links[hash] || links[sectionId];
         if (activeLink) {
             activeLink.classList.add('text-blue-600', 'font-bold');
             activeLink.classList.remove('text-gray-400');
         }
+
+        // Open parent section if subsection is active
+        if (subsectionId) {
+            const parentUl = activeLink.closest('ul');
+            if (parentUl) parentUl.classList.remove('hidden');
+
+            const parentButton = parentUl.previousElementSibling;
+            const arrowSvg = parentButton.querySelector('svg');
+            if (arrowSvg) arrowSvg.classList.add('rotate-270');
+        } else {
+            const sectionButton = links[sectionId];
+            if (sectionButton && sectionButton.querySelector('svg')) {
+                sectionButton.querySelector('svg').classList.add('rotate-270');
+            }
+        }
     }
 
     // Load entry when hash changes
-    window.addEventListener('hashchange', () => {
-        const hash = window.location.hash.substring(1);
-        if (hash) loadEntry(hash);
-    });
-
-    // Load initial entry if hash exists
-    const initialHash = window.location.hash.substring(1);
-    if (initialHash) {
-        loadEntry(initialHash);
-    } else {
-        content.innerHTML = `<h1 class="text-3xl font-bold mb-4">Welcome to MyWiki</h1>
-                             <p>Select a topic from the sidebar to see its content.</p>`;
-    }
+    window.addEventListener('hashchange', () => loadEntry(window.location.hash.substring(1)));
+    if (window.location.hash) loadEntry(window.location.hash.substring(1));
 </script>
 
 </body>
