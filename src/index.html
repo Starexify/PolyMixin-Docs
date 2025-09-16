@@ -37,84 +37,80 @@
         {
             id: 'getting-started',
             title: 'Getting Started',
-            content: `
-<div class="flex flex-col gap-5">
-               <p class="text-3xl font-bold mb-2">Understanding PolyMixin</p>
+            content: `<div class="flex flex-col gap-5">
+<p class="text-3xl font-bold mb-2">Understanding PolyMixin</p>
 
-               <p class="text-2xl font-bold -ml-2">What is PolyMixin ?</p>
-               <p class="mb-4"><strong>PolyMixin</strong> is a <strong>framework and API</strong> for V-Slice mods, built on <doc-link href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</doc-link> manipulation.
+<p class="text-2xl font-bold -ml-2">What is PolyMixin ?</p>
+<p class="mb-4"><strong>PolyMixin</strong> is a <strong>framework and API</strong> for V-Slice mods, built on <doc-link href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</doc-link> manipulation.
 It is inspired by the mixin pattern used in projects like SpongePowered Mixin (Minecraft), and allows modders to patch or extend scripted classes without modifying their original scripts.</p>
 
-               <p class="text-2xl font-bold -ml-2">How does it work ?</p>
-               <p>PolyMixin hooks into Polymod's scripting system by using the <code-field>PolymodScriptClass</code-field>(<code-field>_abs</code-field>) and modifying the <code-field>_cachedFunctionDecls</code-field> and <code-field>_cachedFieldDecls</code-field>.
-               It replaces or transforms the function declarations (<code-field>FunctionDecl</code-field>) using the function declaration from another class, which is also a <code-field>PolymodScriptClass</code-field>.</p>
-               <p class="mb-4">Think of it as "hot-swapping" functions at the AST level.</p>
+<p class="text-2xl font-bold -ml-2">How does it work ?</p>
+<p>PolyMixin hooks into Polymod's scripting system by using the <code-field>PolymodScriptClass</code-field>(<code-field>_abs</code-field>) and modifying the <code-field>_cachedFunctionDecls</code-field> and <code-field>_cachedFieldDecls</code-field>.
+It replaces or transforms the function declarations (<code-field>FunctionDecl</code-field>) using the function declaration from another class, which is also a <code-field>PolymodScriptClass</code-field>.</p>
+<p class="mb-4">Think of it as "hot-swapping" functions at the AST level.</p>
 
-               <p class="text-2xl font-bold -ml-2">Limitations ?</p>
-               <p>Currently, there are some limitations:</p>
-               <ul class="list-disc ml-6 mb-4">
-                 <li>Some transformations are applied later, because mixins may load before or after the base class (always check for PolyMixin and the original module’s availability before using it).</li>
-                 <li>Lack of testing in actual mods use cases, so behavior may be unpredictable.</li>
-               </ul>
-</div>
-`,
+<p class="text-2xl font-bold -ml-2">Limitations ?</p>
+<p>Currently, there are some limitations:</p>
+<ul class="list-disc ml-6 mb-4">
+  <li>Some transformations are applied later, because mixins may load before or after the base class (always check for PolyMixin and the original module’s availability before using it).</li>
+  <li>Lack of testing in actual mods use cases, so behavior may be unpredictable.</li>
+</ul>
+</div>`,
             subsections: []
         },
         {
             id: 'setup',
             title: 'Setting up PolyMixins',
-            content: `
-<div class="flex flex-col gap-5">
-               <p class="text-2xl font-bold -ml-2">Preparation</p>
-               <p>Before you start to use <strong>PolyMixins</strong>, you should have a basic understanding of scripting in V-Slice and how it works.</p>
-               <div>
-                 <p>If you are new to V-Slice modding, you may want to check out documentation and tutorials first.</p>
-                 <p>Here are some resources to get you started:</p>
-               </div>
-               <ul class="list-disc ml-6 mb-4 font-bold">
-                 <li><doc-link href="https://funkincrew.github.io/funkin-modding-docs/">Friday Night Funkin' Modding Documentation</doc-link></li>
-                 <li><doc-link href="https://thekade.net/funkin-cookbook/">Friday Night Funkin' Cookbook</doc-link></li>
-                 <li><doc-link href="https://polymod.io/docs/">Polymod Documentation</doc-link></li>
-                 <li><doc-link href="https://haxe.org/documentation/introduction/">Haxe Documentation</doc-link></li>
-               </ul>
+            content: `<div class="flex flex-col gap-5">
+<p class="text-2xl font-bold -ml-2">Preparation</p>
+<p>Before you start to use <strong>PolyMixins</strong>, you should have a basic understanding of scripting in V-Slice and how it works.</p>
+<div>
+  <p>If you are new to V-Slice modding, you may want to check out documentation and tutorials first.</p>
+  <p>Here are some resources to get you started:</p>
+</div>
+<ul class="list-disc ml-6 mb-4 font-bold">
+  <li><doc-link href="https://funkincrew.github.io/funkin-modding-docs/">Friday Night Funkin' Modding Documentation</doc-link></li>
+  <li><doc-link href="https://thekade.net/funkin-cookbook/">Friday Night Funkin' Cookbook</doc-link></li>
+  <li><doc-link href="https://polymod.io/docs/">Polymod Documentation</doc-link></li>
+  <li><doc-link href="https://haxe.org/documentation/introduction/">Haxe Documentation</doc-link></li>
+</ul>
 
-              <p class="text-2xl font-bold -ml-2">Installation</p>
-              <p>
-               To use <strong>PolyMixin</strong> in your project, make sure it is installed as a <strong>mod</strong> inside your Friday Night Funkin' mods folder.
-               PolyMixin should be placed alongside your other mods so that it can patch and extend scripts during runtime.
-              </p>
-              <p>You can download PolyMixin from:</p>
-              <ul class="list-disc ml-6 font-bold">
-                <li><doc-link href="https://github.com/Starexify/PolyMixin/tree/main">Official GitHub Repo</doc-link></li>
-              </ul>
-              <p class="mb-4">After installing, verify that PolyMixin loads correctly before attempting to use any mixin features in your own mods.</p>
+<p class="text-2xl font-bold -ml-2">Installation</p>
+<p>
+ To use <strong>PolyMixin</strong> in your project, make sure it is installed as a <strong>mod</strong> inside your Friday Night Funkin' mods folder.
+ PolyMixin should be placed alongside your other mods so that it can patch and extend scripts during runtime.
+</p>
+<p>You can download PolyMixin from:</p>
+<ul class="list-disc ml-6 font-bold">
+  <li><doc-link href="https://github.com/Starexify/PolyMixin/tree/main">Official GitHub Repo</doc-link></li>
+</ul>
+<p class="mb-4">After installing, verify that PolyMixin loads correctly before attempting to use any mixin features in your own mods.</p>
 
-              <p class="text-2xl font-bold -ml-2">Configuration</p>
-              <p>Now moving to the juicy stuff, configuration.
-              PolyMixin gives you the possibility to add your own configuration for mixins to load when the game starts and after hot reloads.
-              </p>
-              <div>
-                <p>First you need a mixin configuration file. <span class="text-red-700 font-bold">Important!</span> <strong>The file should be placed in <code-field>mods/YourMod/_polymixin_config.json</code-field></strong></p>
-                <p>An example of how a configuration file can look like:</p>
-              </div>
-              <code-block language="json">
+<p class="text-2xl font-bold -ml-2">Configuration</p>
+<p>Now moving to the juicy stuff, configuration.
+PolyMixin gives you the possibility to add your own configuration for mixins to load when the game starts and after hot reloads.
+</p>
+<div>
+  <p>First you need a mixin configuration file. <span class="text-red-700 font-bold">Important!</span> <strong>The file should be placed in <code-field>mods/YourMod/_polymixin_config.json</code-field></strong></p>
+  <p>An example of how a configuration file can look like:</p>
+</div>
+<code-block language="json">
 {
   "mixins": [
-    { "className": "ExampleSongMixin", "kind": "Song", "params": { "id": "testing", "variation": "default" } },
+    { "className": "ExampleSongMixin", "kind": "SongMixin", "params": { "id": "testing", "variation": "default" } },
     { "className": "ExampleModuleMixin", "kind": "Mixin" },
     "BoyfriendMixin"
   ]
 }
-              </code-block>
-              <p>After adding the configuration file all you need to do for this is add this line in the <code-field>onCreate</code-field> event:</p>
-              <code-block language="haxe">
+</code-block>
+<p>After adding the configuration file all you need to do for this is add this line in the <code-field>onCreate</code-field> event:</p>
+<code-block language="haxe">
 override public function onCreate(event:ScriptEvent) {
     Mixins.addConfig("ModID"); // The ModID is the path to your mod's folder, for example "PolyMixin"
 }
-              </code-block>
-              <p>For more information about configuration, check out the <doc-link href="#classes:mixins" target-off>Mixins</doc-link> class.</p>
-</div>
-`,
+</code-block>
+<p>For more information about configuration, check out the <doc-link href="#classes:mixins" target-off>Mixins</doc-link> class.</p>
+</div>`,
             subsections: []
         },
         {
@@ -125,99 +121,96 @@ override public function onCreate(event:ScriptEvent) {
                 {
                     id: 'overwrite',
                     title: '@:Overwrite',
-                    content: `
-<div class="flex flex-col gap-2">
-                    <p>There are many ways to overwrite functions using mixins, and one of them is by using the <code-field>@:Overwrite</code-field> annotation.</p>
-                    <p>So let's take for example the following snippet of a script:</p>
-                    <code-block language="haxe">
+                    content: `<div class="flex flex-col gap-2">
+<p>There are many ways to overwrite functions using mixins, and one of them is by using the <code-field>@:Overwrite</code-field> annotation.</p>
+<p>So let's take for example the following snippet of a script:</p>
+<code-block language="haxe">
 public function test() {
     trace("test() called");
 }
-                    </code-block>
-                    <p>If you need to overwrite that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-                    <code-block language="haxe">
+</code-block>
+<p>If you need to overwrite that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+<code-block language="haxe">
 @:Overwrite(method = "test")
 function testOverwrite() {
     trace("Overwrote test()");
 }
-                    </code-block>
-</div>
-                    `
+</code-block>
+</div>`
                 },
                 {
                     id: 'inject',
                     title: '@:Inject',
-                    content: `
-<div class="flex flex-col gap-2">
-                    <p>There are many ways to inject into functions using mixins, and one of them is by using the <code-field>@:Inject</code-field> annotation.</p>
-                    <p class="mb-4">But choose carefully because there are many types of injection such as:</p>
+                    content: `<div class="flex flex-col gap-2">
+<p>There are many ways to inject into functions using mixins, and one of them is by using the <code-field>@:Inject</code-field> annotation.</p>
+<p class="mb-4">But choose carefully because there are many types of injection such as:</p>
 
-                    <div class="flex flex-col space-y-3">
-                      <p class="font-bold text-xl">Injecting at the HEAD of a function</p>
-                      <p>So let's take for example the following snippet of a script:</p>
-                      <code-block language="haxe">
+<div class="flex flex-col space-y-3">
+  <p class="font-bold text-xl">Injecting at the HEAD of a function</p>
+  <p>So let's take for example the following snippet of a script:</p>
+  <code-block language="haxe">
 public function test() {
     trace("test() called");
 }
-                      </code-block>
-                      <p>If you need to inject code into that function at the beginning here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-                      <code-block language="haxe">
+ </code-block>
+ <p>If you need to inject code into that function at the beginning here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+ <code-block language="haxe">
 @:Inject(method = "test", at = "HEAD")
 function testInject() {
     trace("Injected into test() at HEAD");
 }
-                      </code-block>
-                      <p>The function would look like this after the injection:</p>
-                      <code-block language="haxe">
+ </code-block>
+ <p>The function would look like this after the injection:</p>
+ <code-block language="haxe">
 public function test() {
     trace("Injected into test() at HEAD");
     trace("test() called");
 }
-                      </code-block>
+ </code-block>
 
-                      <p class="font-bold text-xl mt-4">Injecting at the RETURN of a function</p>
-                      <p>Now let's take another example:</p>
-                      <code-block language="haxe">
+ <p class="font-bold text-xl mt-4">Injecting at the RETURN of a function</p>
+ <p>Now let's take another example:</p>
+ <code-block language="haxe">
 public function test() {
     doSomething();
     return trace("Test Return");
 }
-                      </code-block>
-                      <p>If you need to inject code into that function before the return here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-                      <code-block language="haxe">
+ </code-block>
+ <p>If you need to inject code into that function before the return here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+ <code-block language="haxe">
 @:Inject(method = "test", at = "RETURN")
 function testInject() {
     trace("Injected into test() at RETURN");
 }
-                      </code-block>
-                      <p>The function would look like this after the injection:</p>
-                      <code-block language="haxe">
+ </code-block>
+ <p>The function would look like this after the injection:</p>
+ <code-block language="haxe">
 public function test() {
     doSomething();
     trace("Injected into test() at RETURN");
     return trace("Test Return");
 }
-                      </code-block>
+ </code-block>
 
-                      <p class="font-bold text-xl mt-4">Injecting at a target inside the function using INVOKE</p>
-                      <p>And the last example:</p>
-                      <code-block language="haxe">
+ <p class="font-bold text-xl mt-4">Injecting at a target inside the function using INVOKE</p>
+ <p>And the last example:</p>
+ <code-block language="haxe">
 public function test() {
     trace("test() called");
     doSomething();
     doSomething();
     trace("test() called x2");
 }
-                      </code-block>
-                      <p>If you need to inject code into that function before doSomething() here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-                      <code-block language="haxe">
+ </code-block>
+ <p>If you need to inject code into that function before doSomething() here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+ <code-block language="haxe">
 @:Inject(method = "test", at = "INVOKE", target = "doSomething")
 function testInject() {
     trace("Injected into test() before doSomething()");
 }
-                      </code-block>
-                      <p>The function would look like this after the injection:</p>
-                      <code-block language="haxe">
+ </code-block>
+ <p>The function would look like this after the injection:</p>
+ <code-block language="haxe">
 public function test() {
     trace("test() called");
     trace("Injected into test() before doSomething()");
@@ -225,30 +218,28 @@ public function test() {
     doSomething();
     trace("test() called x2");
 }
-                      </code-block>
+   </code-block>
 
-                      <tip-block>
-                        Injection behavior depends on the annotation parameters you use.
-                        <p class="text-gray-400 text-sm">See <doc-link href="#injection-params" target-off>Injection Parameters</doc-link> for more information.</p>
-                      </tip-block>
-                    </div>
-</div>
-                    `
+   <tip-block>
+     Injection behavior depends on the annotation parameters you use.
+     <p class="text-gray-400 text-sm">See <doc-link href="#injection-params" target-off>Injection Parameters</doc-link> for more information.</p>
+   </tip-block>
+ </div>
+</div>`
                 },
                 {
                     id: 'modify-return',
                     title: '@:ModifyReturn',
-                    content: `
-<div class="flex flex-col gap-2">
-                    <p>There are many ways to modify the return call of a function using mixins, and one of them is by using the <code-field>@:ModifyReturn</code-field> annotation.</p>
-                    <p>Let's take for example the following snippet of a script:</p>
-                    <code-block language="haxe">
+                    content: `<div class="flex flex-col gap-2">
+<p>There are many ways to modify the return call of a function using mixins, and one of them is by using the <code-field>@:ModifyReturn</code-field> annotation.</p>
+<p>Let's take for example the following snippet of a script:</p>
+<code-block language="haxe">
 public function test() {
     return 20;
 }
-                    </code-block>
-                    <p>If you need to modify the return call of that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-                    <code-block language="haxe">
+</code-block>
+<p>If you need to modify the return call of that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+<code-block language="haxe">
 @:ModifyReturn(method = "test", call = testReturnCall)
 function testReturn(original:Int) {
     return original + 10;
@@ -257,37 +248,35 @@ function testReturn(original:Int) {
 function testReturnCall(original:Int) {
     testReturn(original);
 }
-                    </code-block>
+</code-block>
 
-                    &nbsp;
-                    <note-block>The Call function is required for the modified return to work !</note-block>
-                    <p></p>
-                    <p>And the function would look like this after the modification:</p>
-                    <code-block language="haxe">
+&nbsp;
+<note-block>The Call function is required for the modified return to work !</note-block>
+<p></p>
+<p>And the function would look like this after the modification:</p>
+<code-block language="haxe">
 public function test() {
     return testReturnCall(20 + 10);
 }
-                    </code-block>
-</div>
-                    `
+</code-block>
+</div>`
                 },
                 {
                     id: 'modify-expression',
                     title: '@:ModifyExpression',
-                    content: `
-<div class="flex flex-col gap-2">
-                    <p>There are many ways to modify the expression call of a function using mixins, and one of them is by using the <code-field>@:ModifyExpression</code-field> annotation.</p>
-                    <p>Let's take for example the following snippet of a script:</p>
-                    <code-block language="haxe">
+                    content: `<div class="flex flex-col gap-2">
+<p>There are many ways to modify the expression call of a function using mixins, and one of them is by using the <code-field>@:ModifyExpression</code-field> annotation.</p>
+<p>Let's take for example the following snippet of a script:</p>
+<code-block language="haxe">
 public function test() {
     if (true) trace(true);
     if (false) trace(false);
     if (true) trace("true x2");
     if (true) trace("true x3");
 }
-                    </code-block>
-                    <p>If you need to modify the return call of that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-                    <code-block language="haxe">
+</code-block>
+<p>If you need to modify the return call of that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+<code-block language="haxe">
 @:ModifyExpression(method = "test", call = testExprCall, target = true, ordinal = 0)
 function testExpr(original:Bool) {
     return false;
@@ -296,114 +285,199 @@ function testExpr(original:Bool) {
 function testExprCall(original:Bool) {
     testExpr(original);
 }
-                    </code-block>
+</code-block>
 
-                    &nbsp;
-                    <note-block>The Call function is required for the modified expression to work !</note-block>
-                    <p></p>
-                    <p>And the function would look like this after the modification:</p>
-                    <code-block language="haxe">
+&nbsp;
+<note-block>The Call function is required for the modified expression to work !</note-block>
+<p></p>
+<p>And the function would look like this after the modification:</p>
+<code-block language="haxe">
 public function test() {
     if (testExprCall(testExpr(true))) trace(true);
     if (false) trace(false);
     if (true) trace("true x2");
     if (true) trace("true x3");
 }
-                    </code-block>
-                    <tip-block>
-                      Injection behavior depends on the annotation parameters you use.
-                      <p class="text-gray-400 text-sm">See <doc-link href="#injection-params" target-off>Injection Parameters</doc-link> for more information.</p>
-                    </tip-block>
-</div>
-                    `
+</code-block>
+<tip-block>
+  Injection behavior depends on the annotation parameters you use.
+  <p class="text-gray-400 text-sm">See <doc-link href="#injection-params" target-off>Injection Parameters</doc-link> for more information.</p>
+</tip-block>
+</div>`
                 },
                 {
                     id: 'inject-function',
                     title: '@:InjectFunction',
-                    content: `
-<div class="flex flex-col gap-2">
-                    <p>There are many ways to inject a function using mixins, and one of them is by using the <code-field>@:InjectFunction</code-field> annotation.</p>
-                    <p>So let's take for example you need a function inside a class, here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link> for that:</p>
-                    <code-block language="haxe">
+                    content: `<div class="flex flex-col gap-2">
+<p>There are many ways to inject a function using mixins, and one of them is by using the <code-field>@:InjectFunction</code-field> annotation.</p>
+<p>So let's take for example you need a function inside a class, here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link> for that:</p>
+<code-block language="haxe">
 @:InjectFunction
 function newTest() {
     trace("newTest() function injected");
 }
-                    </code-block>
-                    <p>The class would now have this function and can be used:</p>
-                    <code-block language="haxe">
+</code-block>
+<p>The class would now have this function and can be used:</p>
+<code-block language="haxe">
 function newTest() {
     trace("newTest() function injected");
 }
-                     </code-block>
-</div>
-                    `
+</code-block>
+</div>`
                 }
             ]
         },
         {
             id: 'injection-params',
             title: 'Injection Parameters',
-            content: `
-<div class="flex flex-col gap-3">
-                <p class="mb-4">Injection Parameters define where and when mixins annotations or functions apply their injection.</p>
+            content: `<div class="flex flex-col gap-3">
+<p class="mb-4">Injection Parameters define where and when mixins annotations or functions apply their injection.</p>
 
-                <p class="text-2xl font-bold -ml-2">Method (Target Method)</p>
-                <p class="mb-6">The <code-field>method</code-field> parameter specifies which method/function the mixin function will inject into.</p>
+<p class="text-2xl font-bold -ml-2">Method (Target Method)</p>
+<p class="mb-6">The <code-field>method</code-field> parameter specifies which method/function the mixin function will inject into.</p>
 
-                <p class="text-2xl font-bold -ml-2">At (Injection Point)</p>
-                <p>The <code-field>at</code-field> parameter specifies the point where the mixin function is injected.</p>
-                <p>Supported values:</p>
-                <ul class="list-disc space-y-1 ml-6 mb-6">
-                 <li><code-field>At.HEAD</code-field> / <code-field>"HEAD"</code-field> - injects at the beginning</li>
-                 <li><code-field>At.TAIL</code-field> / <code-field>"TAIL"</code-field> - injects at the bottom</li>
-                 <li><code-field>At.INVOKE</code-field> / <code-field>"INVOKE"</code-field> - injects at a specific method call <span class="text-sm">(can be used with <code-field>Shift</code-field>)</span></li>
-                 <li><code-field>At.RETURN</code-field> / <code-field>"RETURN"</code-field> - injects before <code-field>return</code-field></li>
-                </ul>
+<p class="text-2xl font-bold -ml-2">At (Injection Point)</p>
+<p>The <code-field>at</code-field> parameter specifies the point where the mixin function is injected.</p>
+<p>Supported values:</p>
+<data-table class="mb-4"
+    data-headers="Enum,String,Description"
+    data-json='[
+        ["At.HEAD", "\\"HEAD\\"", "Injects at the beginning"],
+        ["At.TAIL", "\\"TAIL\\"", "Injects at the bottom"],
+        ["At.INVOKE", "\\"INVOKE\\"", "Injects at a specific method call {small}(can be used with \`Shift\`){/small}"],
+        ["At.RETURN", "\\"RETURN\\"", "Injects before \`return\`"]
+    ]'>
+</data-table>
 
-                <p class="text-2xl font-bold -ml-2">Shift (Injection Positioning)</p>
-                <p>The <code-field>shift</code-field> parameter adjusts the position of an injection, most often with <code-field>At.INVOKE</code-field></p>
-                <p>Options:</p>
-                <ul class="list-disc space-y-1 ml-6 mb-6">
-                 <li><code-field>Shift.BEFORE</code-field> or <code-field>"BEFORE"</code-field> - before the injection point</li>
-                 <li><code-field>Shift.AFTER</code-field> or <code-field>"AFTER"</code-field> - after the injection point</li>
-                </ul>
+<p class="text-2xl font-bold -ml-2">Shift (Injection Positioning)</p>
+<p>The <code-field>shift</code-field> parameter adjusts the position of an injection, most often with <code-field>At.INVOKE</code-field></p>
+<p>Options:</p>
+<data-table class="mb-4"
+    data-headers="Enum,String,Description"
+    data-json='[
+        ["Shift.BEFORE", "\\"BEFORE\\"", "before the injection point"],
+        ["Shift.AFTER", "\\"AFTER\\"", "after the injection point"]
+    ]'>
+</data-table>
 
-                <p class="text-2xl font-bold -ml-2">Target (Injection Target)</p>
-                <p class="mb-6">The <code-field>target</code-field> parameter defines the specific method or instruction the mixin should inject into. Mainly used alongside <code-field>At.INVOKE</code-field>.</p>
+<p class="text-2xl font-bold -ml-2">Target (Injection Target)</p>
+<p class="mb-6">The <code-field>target</code-field> parameter defines the specific method or instruction the mixin should inject into. Mainly used alongside <code-field>At.INVOKE</code-field>.</p>
 
-                <p class="text-2xl font-bold -ml-2">Ordinal</p>
-                <p>The <code-field>ordinal</code-field> parameter selects which occurrence of a target to inject into. Usually used with a <code-field>Target</code-field> but can sometimes be used with <code-field>At.RETURN</code-field>.</p>
-                <ul class="list-disc space-y-1 ml-6 mb-6">
-                 <li><code-field>-1</code-field> - inject at every matching target</li>
-                 <li><code-field>0</code-field> or higher - inject at that specific index</li>
-                </ul>
+<p class="text-2xl font-bold -ml-2">Ordinal</p>
+<p>The <code-field>ordinal</code-field> parameter selects which occurrence of a target to inject into. Usually used with a <code-field>Target</code-field> but can sometimes be used with <code-field>At.RETURN</code-field>.</p>
+<data-table class="mb-4"
+    data-headers="Integer,Description">
+    <code-field>-1</code-field> | inject at every matching target
+    <code-field>0</code-field> or higher | inject at that specific index
+</data-table>
 
-                <p class="text-2xl font-bold -ml-2">Call</p>
-                <p class="mb-6">The <code-field>call</code-field> parameter specifies the function call where the mixin function will be applied. Mainly used alongside <doc-link href="#annotations:modify-return" target-off>@:ModifyReturn</doc-link> & <doc-link href="#annotations:modify-expression" target-off>@:ModifyExpression</doc-link>.</p>
-</div>
-`,
+<p class="text-2xl font-bold -ml-2">Call</p>
+<p class="mb-6">The <code-field>call</code-field> parameter specifies the function call where the mixin function will be applied. Mainly used alongside <doc-link href="#annotations:modify-return" target-off>@:ModifyReturn</doc-link> & <doc-link href="#annotations:modify-expression" target-off>@:ModifyExpression</doc-link>.</p>
+</div>`,
             subsections: []
         },
         {
             id: 'classes',
             title: 'Classes',
-            content: ``,
+            content: `<note-block text="Info">For more information about the classes check the source code from the <doc-link href="https://github.com/Starexify/PolyMixin">GitHub Repo</doc-link></note-block>`,
             subsections: [
                 {
                     id: 'polymixin',
                     title: 'PolyMixin',
-                    content: `(WIP)`
+                    content: `<div class="flex flex-col gap-3">
+<p>PolyMixin is the main class which handles all the transformation related logic, providing helper functions for AST injection which can be used by mods aswell.</p>
+<p>It contains the following API methods:</p>
+<data-table class="mb-4"
+    data-headers="Method,Parameters,Description"
+    data-json='[
+        ["modifyByName()", "targetInstance, targetFuncName, sourceInstance, sourceFuncName, callFuncName, at, ?target, ?ordinal", "Wraps return values or expressions with mixin function calls. Uses empty recall template to modify specific parts like return statements (At.RETURN) or expressions (At.INVOKE)."],
+        ["injectByName()", "targetInstance, targetFuncName, sourceInstance, sourceFuncName, at, ?target, ?ordinal, ?shift", "Injects source function contents into target function at specified locations: HEAD (start), TAIL (end), RETURN (before returns), or INVOKE (around method calls)."],
+        ["injectFunction()", "targetInstance, sourceInstance, sourceFuncName", "Copies a complete function from source to target instance, adding it to both function cache and AST as if originally declared there."],
+        ["overwrite()", "targetInstance, targetFuncName, sourceInstance, sourceFuncName", "Completely replaces target function body with source function, making them identical in functionality."]
+    ]'>
+</data-table>
+</div>`
                 },
                 {
                     id: 'mixin-annotation-proc',
                     title: 'MixinAnnotationProcessor',
-                    content: `(WIP)`
+                    content: `<div class="flex flex-col gap-3">
+<p>The MixinAnnotationProcessor is an API class which can apply all the mixins from a <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link> which contains mixin annotations.</p>
+<p>It contains the following API methods:</p>
+<data-table class="mb-4"
+    data-headers="Method,Parameters,Description"
+    data-json='[
+        ["applyMixins()", "source, target", "Applies all mixins from source class to target instance. Processes both instance and static fields from the class definition."],
+        ["applyModuleMixins()", "source, className", "Applies mixins to a \`ScriptedModule\` by class name using \`ASTUtil.getScriptedModule()\`."],
+        ["applySongMixins()", "source, id, ?params", "Applies mixins to a \`ScriptedSong\` by ID with optional song parameters."],
+        ["applyLevelMixins()", "source, id", "Applies mixins to a \`ScriptedLevel\` by ID."],
+        ["applyNoteStyleMixins()", "source, id", "Applies mixins to a \`ScriptedNoteStyle\` by ID."],
+        ["applyPlayerMixins()", "source, id", "Applies mixins to a \`ScriptedPlayer\` by ID."],
+        ["applyConversationMixins()", "source, id", "Applies mixins to a \`ScriptedConversation\` by ID."],
+        ["applyDialogueMixins()", "source, id", "Applies mixins to a \`ScriptedDialogue\` by ID."],
+        ["applySpeakerMixins()", "source, id", "Applies mixins to a \`ScriptedSpeaker\` by ID."],
+        ["applyAlbumMixins()", "source, id", "Applies mixins to a \`ScriptedAlbum\` by ID."],
+        ["applyStageMixins()", "source, id", "Applies mixins to a \`ScriptedStage\` by ID."],
+        ["applyStickerMixins()", "source, id", "Applies mixins to a \`ScriptedSticker\` by ID."],
+        ["applyFreeplayStyleMixins()", "source, id", "Applies mixins to a \`ScriptedFreeplayStyle\` by ID."],
+        ["applySongEventMixins()", "source, id", "Applies mixins to a \`ScriptedSongEvent\` by ID."],
+        ["applyNoteKindMixins()", "source, id", "Applies mixins to a \`ScriptedNoteKind\` by ID."]
+    ]'>
+</data-table>
+</div>`
                 },
                 {
                     id: 'mixins',
                     title: 'Mixins',
-                    content: `(WIP)`
+                    content: `<div class="flex flex-col gap-3">
+<p>Mixins provides helper functions for adding your own config into PolyMixin so it can be automatically loaded when the game just started or hot reloaded.</p>
+<p>A configuration file can look like:</p>
+<code-block language="json">
+{
+  "mixins": [
+    { "className": "ExampleSongMixin", "kind": "SongMixin", "params": { "id": "testing", "variation": "default" } },
+    { "className": "ExampleModuleMixin", "kind": "Mixin" },
+    "BoyfriendMixin"
+  ]
+}
+</code-block>
+<p class="mb-4"><span class="text-red-800 font-bold text-lg">! IMPORTANT</span> The json file should always be named <code-field>_polymixin_config.json</code-field> or the Mixins class will never recognize it.</p>
+<p>Now let's talk about the fields of the config</p>
+<div class="space-y-3">
+  <p>First, the <code-field>"className"</code-field> is the name of the <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>, in this case "ExampleSongMixin" or "BoyfriendMixin".
+  Also, note that the map <code-field>{ "className": ... }</code-field> is not required if there are no other fields given such as "kind".</p>
+  <p>Next field is <code-field>"kind"</code-field>, this decides what kind of scripted class the mixin will be applied to, for example "SongMixin" will be applied to a <code-field>ScriptedSong</code-field> or "Mixin" to a <code-field>ScriptedModule</code-field></p>
+  <p>The currently supported scripted classes for mixins using configs or Mixin Class annotations (<code-field>@:MixinKind</code-field>) are:</p>
+  <data-table
+    data-headers="Script,Kind,String"
+    data-json='[
+      ["ScriptedModule", "MixinKind.Mixin", "Mixin/ModuleMixin"],
+      ["ScriptedSong", "MixinKind.SongMixin", "SongMixin"],
+      ["ScriptedLevel", "MixinKind.LevelMixin", "LevelMixin"],
+      ["ScriptedNoteStyle", "MixinKind.NoteStyleMixin", "NoteStyleMixin"],
+      ["ScriptedPlayer", "MixinKind.PlayerMixin", "PlayerMixin"],
+      ["ScriptedConversation", "MixinKind.DialogueBoxMixin", "DialogueMixin"],
+      ["ScriptedDialogueBox", "MixinKind.DialogueBoxMixin", "DialogueBoxMixin"],
+      ["ScriptedSpeaker", "MixinKind.SpeakerMixin", "SpeakerMixin"],
+      ["ScriptedAlbum", "MixinKind.AlbumMixin", "AlbumMixin"],
+      ["ScriptedStage", "MixinKind.StageMixin", "StageMixin"],
+      ["ScriptedSticker", "MixinKind.StickerMixin", "StickerMixin"],
+      ["ScriptedFreeplayStyle", "MixinKind.FreeplayStyleMixin", "FreeplayStyleMixin"],
+      ["ScriptedSongEvent", "MixinKind.SongEventMixin", "SongEventMixin"],
+      ["ScriptedNoteKind", "MixinKind.NoteKindMixin", "NoteKindMixin"]
+    ]'>
+  </data-table>
+  <note-block class="block mt-2 mb-5">As long as you have an instance of the scripted class, you can modify it at any time using either the <doc-link href="#classes:polymixin" target-off>PolyMixins</doc-link> or <doc-link href="#classes:mixin-annotation-proc" target-off>MixinAnnotationProcessor</doc-link>.</note-block>
+  <p>Next field is <code-field>"params"</code-field>, at the moment this field is only used by <code-field>ScriptedSongs</code-field> and contains a "variation", since they use a parameter for variation-specific song scripts.</p>
+</div>
+
+<p>To register your configuration file for PolyMixin to be able to use it you have to add this line in the <code-field>onCreate</code-field> event:</p>
+<code-block language="haxe">
+override public function onCreate(event:ScriptEvent) {
+    Mixins.addConfig("ModID"); // The ModID is the path to your mod's folder, for example "PolyMixin"
+}
+</code-block>
+</div>`
                 }
             ]
         },
@@ -415,9 +489,68 @@ function newTest() {
                 {
                     id: 'mixin-class',
                     title: 'Mixin Classes',
-                    content: `
-<div class="flex flex-col gap-3">(WIP)</div>
-`
+                    content: `<div class="flex flex-col gap-3">
+<p>Mixin Classes are simply classes that can be used to apply transformations into scripted classes via many different methods.</p>
+<p class="text-2xl font-bold -ml-2">Mixin Class Annotations + Configuration</p>
+<p>A class using Mixin Class Annotations looks like:</p>
+<code-block>
+@:Mixin(TargetClass)
+class TargetClassMixin extends ScriptedModule {
+
+    @:Overwrite(method = "test")
+    function testOverwrite() {
+        trace("Overwrote test()");
+    }
+
+    // Other injections or functions...
+}
+</code-block>
+<p>The <code-field>@:Mixin</code-field> field determines the MixinKind (Check <doc-link href="#classes:mixins" target-off>Mixins</doc-link> for more information)</p>
+<p class="mb-4">Then inside the annotation we can have different parameters, first being the target script (<code-field>TargetClass</code-field> in this example), or for <code-field>SongMixin</code-field> we can also have <code-field>variation = "pico"</code-field></p>
+
+<p class="text-2xl font-bold -ml-2">MixinAnnotationProcessor + Annotations</p>
+<p>A class using the <doc-link href="#classes:mixin-annotation-proc" target-off>MixinAnnotationProcessor</doc-link> and <doc-link href="#annotations:overwrite" target-off>Annotations</doc-link> looks like:</p>
+<code-block>
+class TargetClassMixin extends ScriptedModule {
+    var injected:Bool = false;
+
+    override public function onUpdate(event:UpdateScriptEvent) {
+        if (injected) return;
+        if (injected) trace("Injection succeeded!");
+        injected = MixinAnnotationProcessor.applyMixins(this, TargetClass.instance);
+    }
+
+    @:Overwrite(method = "test")
+    function testOverwrite() {
+        trace("Overwrote test()");
+    }
+
+    // Other injections or functions...
+}
+</code-block>
+<p class="mb-4">As you notice, in this example it checks for the injection using a boolean <code-field>onUpdate</code-field> because the classes might not exist which is a bit more tricky than the configuration method.</p>
+
+<p class="text-2xl font-bold -ml-2">PolyMixins</p>
+<p>A class using the <doc-link href="#classes:polymixin" target-off>PolyMixin</doc-link> looks like:</p>
+<code-block>
+class TargetClassMixin extends ScriptedModule {
+    var injected:Bool = false;
+
+    override public function onUpdate(event:UpdateScriptEvent) {
+        if (injected) return;
+        if (injected) trace("Injection succeeded!");
+        injected = PolyMixin.injectFunction(TargetClass.instance, this, "newFunc");
+    }
+
+    function newFunc() {
+        trace("New func called from TargetClass!");
+    }
+
+    // Other injections or functions...
+}
+</code-block>
+<p class="mb-4">As you notice, in this example we go at the lowest level, having to manage mixins ourselves for each case, no automatic annotation checks from MixinAnnotationProcessor, no Configuration, just plain transformation via helper functions.</p>
+</div>`
                 }
             ]
         }
@@ -569,6 +702,24 @@ function newTest() {
             nextIdSpan.textContent = '';
         }
     }
+
+    // Handle Keybinds for switching pages
+    document.addEventListener('keydown', (e) => {
+        const hash = window.location.hash.substring(1);
+        const index = flatEntries.findIndex(entry => entry.id === hash);
+        if (index === -1) return;
+
+        switch (e.key) {
+            case "Enter":
+            case "ArrowRight":
+                if (index < flatEntries.length - 1) window.location.hash = flatEntries[index + 1].id;
+                break;
+            case "ArrowLeft":
+            case "Backspace":
+                if (index > 0) window.location.hash = flatEntries[index - 1].id;
+                break;
+        }
+    });
 
     // Load entry when hash changes
     window.addEventListener('hashchange', () => loadEntry(window.location.hash.substring(1)));

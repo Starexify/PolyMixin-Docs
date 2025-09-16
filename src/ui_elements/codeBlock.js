@@ -3,33 +3,67 @@ export class CodeBlock extends HTMLElement {
         const text = this.textContent.trim();
         const language = this.getAttribute('language') || 'haxe';
 
-        // Create pre and code elements
+        // Create container for the entire code block
+        const container = document.createElement('div');
+        container.className = `bg-slate-900 rounded-lg shadow-lg overflow-hidden font-mono leading-relaxed relative group`;
+
+        // Create wrapper for line numbers and code
+        const codeWrapper = document.createElement('div');
+        codeWrapper.className = 'flex overflow-x-auto';
+
+        // Create line numbers container
+        const lineNumbers = document.createElement('div');
+        lineNumbers.className = 'bg-black/20 text-slate-400 text-right px-3 pr-5 py-4 border-r border-slate-700 min-w-fit';
+
+        // Create code container
+        const codeContainer = document.createElement('div');
+        codeContainer.className = 'flex-1 overflow-x-auto';
+
         const pre = document.createElement('pre');
-        pre.className = `bg-slate-900 rounded-lg shadow-lg overflow-x-auto p-4 font-mono leading-relaxed`;
+        pre.className = `p-4 m-0 overflow-visible`;
 
         const code = document.createElement('code');
         code.className = `block text-gray-100`;
+
+        // Split code into lines and add line numbers
+        const lines = text.split('\n');
+        const maxLineNumber = lines.length;
+        const lineNumberWidth = maxLineNumber.toString().length;
+
+        // Generate line numbers
+        const lineNumbersHtml = lines.map((_, index) => {
+            const lineNum = (index + 1).toString().padStart(lineNumberWidth, ' ');
+            return `<div class="leading-relaxed">${lineNum}</div>`;
+        }).join('');
+        lineNumbers.innerHTML = lineNumbersHtml;
 
         // Apply custom syntax highlighting
         const highlightedCode = SyntaxHighlighter.highlightCode(text, language);
         code.innerHTML = highlightedCode;
 
         pre.appendChild(code);
+        codeContainer.appendChild(pre);
 
+        // Assemble the structure
+        codeWrapper.appendChild(lineNumbers);
+        codeWrapper.appendChild(codeContainer);
+        container.appendChild(codeWrapper);
+
+        // Add language label
         const langLabel = document.createElement('div');
         langLabel.textContent = language;
         langLabel.className = 'absolute top-1 right-1 text-slate-500 px-2 py-0.5 text-xs font-semibold opacity-70 select-none transition-opacity duration-300 group-hover:opacity-0';
-        pre.appendChild(langLabel);
+        container.appendChild(langLabel);
 
         // Clear and add the formatted code
         this.innerHTML = '';
-        this.appendChild(pre);
+        this.appendChild(container);
 
         // Add copy button
-        this.addCopyButton(pre, text);
+        this.addCopyButton(container, text);
     }
 
-    addCopyButton(pre, originalText) {
+    addCopyButton(container, originalText) {
         const copyButton = document.createElement('button');
         copyButton.className = 'absolute top-2 right-2 bg-slate-700 hover:bg-slate-600 text-gray-300 hover:text-white p-1 rounded text-xs font-medium transition-colors opacity-0 hover:cursor-pointer group-hover:opacity-100';
 
@@ -54,18 +88,16 @@ export class CodeBlock extends HTMLElement {
         copyButton.addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(originalText);
-                copyButton.replaceChild(checkIcon, copyIcon); // swap icon
+                copyButton.replaceChild(checkIcon, copyIcon);
                 setTimeout(() => {
-                    copyButton.replaceChild(copyIcon, checkIcon); // revert back
+                    copyButton.replaceChild(copyIcon, checkIcon);
                 }, 2000);
             } catch (err) {
                 console.error('Failed to copy text: ', err);
             }
         });
 
-        // Make parent relative and add group class for hover effect
-        pre.classList.add('relative', 'group');
-        pre.appendChild(copyButton);
+        container.appendChild(copyButton);
     }
 }
 
