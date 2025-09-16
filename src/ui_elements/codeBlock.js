@@ -5,7 +5,7 @@ export class CodeBlock extends HTMLElement {
 
         // Create pre and code elements
         const pre = document.createElement('pre');
-        pre.className = `bg-slate-900 rounded-lg border border-slate-700 shadow-lg overflow-x-auto p-4 font-mono leading-relaxed`;
+        pre.className = `bg-slate-900 rounded-lg shadow-lg overflow-x-auto p-4 font-mono leading-relaxed`;
 
         const code = document.createElement('code');
         code.className = `block text-gray-100`;
@@ -26,7 +26,7 @@ export class CodeBlock extends HTMLElement {
 
     addCopyButton(originalText) {
         const copyButton = document.createElement('button');
-        copyButton.className = 'absolute top-2 right-2 bg-slate-700 hover:bg-slate-600 text-gray-300 hover:text-white p-1 rounded text-xs font-medium transition-colors opacity-0 group-hover:opacity-100';
+        copyButton.className = 'absolute top-2 right-2 bg-slate-700 hover:bg-slate-600 text-gray-300 hover:text-white p-1 rounded text-xs font-medium transition-colors opacity-0 hover:cursor-pointer group-hover:opacity-100';
 
         const copyIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         copyIcon.setAttribute("viewBox", "0 0 24 24");
@@ -57,7 +57,6 @@ export class CodeBlock extends HTMLElement {
                 console.error('Failed to copy text: ', err);
             }
         });
-
 
         // Make parent relative and add group class for hover effect
         this.classList.add('relative', 'group');

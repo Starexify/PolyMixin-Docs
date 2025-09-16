@@ -11,9 +11,9 @@
 
 <body class="bg-slate-800 text-white">
 
-<div class="flex min-h-screen">
-    <aside class="w-1/5 bg-slate-900 flex flex-col sticky top-0 h-screen">
-        <div class="px-4 border-b border-slate-600 h-16 flex items-center font-bold bg-slate-900 z-10 sticky top-0">
+<div class="md:flex min-h-screen">
+    <aside class="bg-slate-900 md:flex flex-col sticky top-0 h-screen p-4 transform -translate-x-full md:translate-x-0 hidden md:translate-visible transition-transform duration-300">
+    <div class="px-4 border-b border-slate-600 h-16 flex justify-center items-center font-bold bg-slate-900 z-10 sticky top-0">
             PolyMixin Documentation
         </div>
 
@@ -22,7 +22,8 @@
         </div>
     </aside>
 
-    <main class="flex-1 py-8 px-16 overflow-x-hidden" id="content">
+    <main class="flex-1 py-8 md:px-16 px-6 md:pr-24 overflow-x-hidden" id="content">
+        <button id="sidebar-toggle" class="md:hidden mb-4 px-3 py-2 bg-slate-700 text-white rounded">Menu</button>
         <h1 class="text-3xl font-bold mb-4">Welcome to PolyMixins Documentation</h1>
         <p>Select a topic from the sidebar to see its content.</p>
     </main>
@@ -31,6 +32,7 @@
 <script>
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
+
     const entries = [
         {
             id: 'getting-started',
@@ -60,7 +62,7 @@ It is inspired by the mixin pattern used in projects like SpongePowered Mixin (M
         },
         {
             id: 'setup',
-            title: 'Setup up Mixin',
+            title: 'Setup up PolyMixins',
             content: `
 <div class="flex flex-col gap-5">
                <p class="text-2xl font-bold">Preparation</p>
@@ -177,14 +179,14 @@ override public function onCreate(event:ScriptEvent) {
         }
     ];
 
-    const links = {};
-
     // Populate sidebar with entries
+    const links = {};
+    const flatEntries = [];
     entries.forEach(entry => {
         const li = document.createElement('li');
 
         const button = document.createElement('button');
-        button.className = "flex items-center justify-between w-full text-left text-gray-400 hover:text-blue-500 py-2 transition-colors font-medium gap-2";
+        button.className = "flex items-center justify-between w-full text-left text-gray-400 hover:text-blue-500 py-2 transition-colors font-medium hover:cursor-pointer";
         button.textContent = entry.title;
 
         li.appendChild(button);
@@ -199,7 +201,7 @@ override public function onCreate(event:ScriptEvent) {
             button.appendChild(arrow);
 
             const subUl = document.createElement('ul');
-            subUl.className = "ml-4 space-y-1 hidden";
+            subUl.className = "ml-4 space-y-2 hidden";
 
             entry.subsections.forEach(sub => {
                 const subLi = document.createElement('li');
@@ -220,11 +222,9 @@ override public function onCreate(event:ScriptEvent) {
 
                 // Toggle arrow rotation: closed (-rotate-90) <-> open (rotate-0)
                 if (isHidden) {
-                    // Opening: rotate from right to down
                     arrow.classList.remove('-rotate-90');
                     arrow.classList.add('rotate-0');
                 } else {
-                    // Closing: rotate from down to right
                     arrow.classList.remove('rotate-0');
                     arrow.classList.add('-rotate-90');
                 }
@@ -237,23 +237,37 @@ override public function onCreate(event:ScriptEvent) {
 
         sidebar.appendChild(li);
         links[entry.id] = button;
+        if (entry.subsections.length > 0) entry.subsections.forEach(sub => { flatEntries.push({ id: `${entry.id}:${sub.id}`, title: sub.title }); });
+        else flatEntries.push({ id: entry.id, title: entry.title });
     });
 
     // Load an entry by ID
     function loadEntry(hash) {
         if (!hash) return;
+
         const [sectionId, subsectionId] = hash.split(':');
         const section = entries.find(e => e.id === sectionId);
         if (!section) return;
 
         let html = `<h1 class="text-4xl font-bold pb-8">${section.title}</h1>
-              <hr class="border-slate-600 mb-6">
-              ${section.content}`;
+                <hr class="border-slate-600 mb-6">
+                ${section.content}`;
 
         if (subsectionId) {
             const sub = section.subsections.find(s => s.id === subsectionId);
             if (sub) html += `<h2 class="text-2xl font-bold mt-6 mb-2">${sub.title}</h2>${sub.content}`;
         }
+
+        html += `<div class="flex justify-center mt-8 md:mx-10 gap-4">
+            <button id="prevSection" class="flex-1 flex flex-col items-start min-w-0 border border-slate-600 hover:border-blue-500 py-2 px-4 rounded-xl hover:cursor-pointer disabled:opacity-0">
+                <span class="text-sm font-semibold">Previous</span>
+                <span id="prevId" class="text-blue-500 mt-1 truncate block max-w-full"></span>
+            </button>
+            <button id="nextSection" class="flex-1 flex flex-col items-end min-w-0 border border-slate-600 hover:border-blue-500 py-2 px-4 rounded-xl hover:cursor-pointer disabled:opacity-0">
+                <span class="text-sm font-semibold">Next</span>
+                <span id="nextId" class="text-blue-500 mt-1 truncate block max-w-full"></span>
+            </button>
+        </div>`;
 
         content.innerHTML = html;
 
@@ -283,6 +297,30 @@ override public function onCreate(event:ScriptEvent) {
                     arrowSvg.classList.add('rotate-0');
                 }
             }
+        }
+
+        const index = flatEntries.findIndex(e => e.id === hash);
+        const prevBtn = document.getElementById('prevSection');
+        const nextBtn = document.getElementById('nextSection');
+        const prevIdSpan = document.getElementById('prevId');
+        const nextIdSpan = document.getElementById('nextId');
+
+        if (index > 0) {
+            prevBtn.disabled = false;
+            prevIdSpan.textContent = flatEntries[index - 1].title;
+            prevBtn.onclick = () => window.location.hash = flatEntries[index - 1].id;
+        } else {
+            prevBtn.disabled = true;
+            prevIdSpan.textContent = '';
+        }
+
+        if (index < flatEntries.length - 1) {
+            nextBtn.disabled = false;
+            nextIdSpan.textContent = flatEntries[index + 1].title;
+            nextBtn.onclick = () => window.location.hash = flatEntries[index + 1].id;
+        } else {
+            nextBtn.disabled = true;
+            nextIdSpan.textContent = '';
         }
     }
 
