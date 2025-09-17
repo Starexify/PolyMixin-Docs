@@ -10,29 +10,59 @@
 </head>
 
 <body class="bg-slate-800 text-white">
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/20 z-40 hidden transition-opacity duration-300"></div>
 
-<div class="md:flex min-h-screen">
-    <aside class="bg-slate-900 md:flex flex-col sticky top-0 h-screen p-4 transform -translate-x-full md:translate-x-0 hidden md:translate-visible transition-transform duration-300">
-        <div class="px-4 border-b border-slate-600 h-16 flex justify-center items-center font-bold bg-slate-900 z-10 sticky top-0">
-            PolyMixin Documentation
+<div class="lg:flex min-h-screen">
+    <aside class="select-none bg-slate-900 flex-col fixed top-0 md:left-0 left-1/2 md:h-full w-1/2 md:w-64 p-4 transform
+                    -translate-x-full xl:translate-x-0 xl:flex transition-transform duration-300 z-50 rounded-b-2xl md:rounded-none">
+        <div class="px-4 h-16 flex justify-center items-center font-bold bg-slate-900 flex-shrink-0 relative">
+            <span class="hidden xl:block">PolyMixin Documentation</span>
+            <button id="sidebar-close" class="xl:hidden p-1 text-gray-400 hover:text-white absolute top-2 right-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
 
-        <div class="flex-1 overflow-y-auto mt-2">
-            <ul id="sidebar" class="space-y-2 px-4"></ul>
+
+        <div class="flex-1 overflow-y-auto mt-2 min-h-0">
+            <ul id="sidebar" class="space-y-2 px-2"></ul>
         </div>
     </aside>
 
-    <main class="flex-1 py-8 md:px-16 px-6 md:pr-24 overflow-x-hidden" id="content">
-        <button id="sidebar-toggle" class="md:hidden mb-4 px-3 py-2 bg-slate-700 text-white rounded">Menu</button>
-        <h1 class="text-3xl font-bold mb-4">Welcome to PolyMixins Documentation</h1>
-        <p>Select a topic from the sidebar to see its content.</p>
-    </main>
+    <div class="flex-1 flex flex-col xl:ml-64 min-h-screen">
+        <header class="text-white shadow-lg border-b border-b-slate-900/50 h-16 flex items-center justify-between px-6 lg:px-12 flex-shrink-0">
+            <h1 class="xl:hidden text-xl font-bold select-none">PolyMixin Docs</h1>
+            <div></div>
+            <div class="flex items-center relative">
+                <a href="https://github.com/Starexify/PolyMixin" target="_blank" class="text-gray-500 hover:text-gray-900 dark:hover:text-white p-2 mr-8">
+                    <svg class="size-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                         viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M10 .333A9.911 9.911 0 0 0 6.866 19.65c.5.092.678-.215.678-.477 0-.237-.01-1.017-.014-1.845-2.757.6-3.338-1.169-3.338-1.169a2.627 2.627 0 0 0-1.1-1.451c-.9-.615.07-.6.07-.6a2.084 2.084 0 0 1 1.518 1.021 2.11 2.11 0 0 0 2.884.823c.044-.503.268-.973.63-1.325-2.2-.25-4.516-1.1-4.516-4.9A3.832 3.832 0 0 1 4.7 7.068a3.56 3.56 0 0 1 .095-2.623s.832-.266 2.726 1.016a9.409 9.409 0 0 1 4.962 0c1.89-1.282 2.717-1.016 2.717-1.016.366.83.402 1.768.1 2.623a3.827 3.827 0 0 1 1.02 2.659c0 3.807-2.319 4.644-4.525 4.889a2.366 2.366 0 0 1 .673 1.834c0 1.326-.012 2.394-.012 2.72 0 .263.18.572.681.475A9.911 9.911 0 0 0 10 .333Z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                    <span class="sr-only">GitHub account</span>
+                </a>
+                <div id="sidebar-toggle-wrapper" class="xl:hidden fixed right-4 z-50 transition-transform transition-opacity duration-300 transform opacity-100 scale-100">
+                    <button id="sidebar-toggle" class="p-2 text-gray-400 hover:text-white bg-slate-900/50 rounded-lg shadow-md">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 py-8 lg:px-16 px-6 lg:pr-24 overflow-y-auto" id="content">
+            <h1 class="text-3xl font-bold mb-4">Welcome to PolyMixins Documentation</h1>
+            <p>Select a topic from the sidebar to see its content.</p>
+        </main>
+    </div>
 </div>
 
 <script>
-    const sidebar = document.getElementById('sidebar');
-    const content = document.getElementById('content');
-
     const entries = [
         {
             id: 'getting-started',
@@ -248,7 +278,7 @@ public function test() {
 }
 </code-block>
 <p>If you need to modify the return call of that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-<code-block language="haxe">
+<code-block class="mb-2" language="haxe">
 @:ModifyReturn(method = "test", call = testReturnCall)
 function testReturn(original:Int) {
     return original + 10;
@@ -258,11 +288,14 @@ function testReturnCall(original:Int) {
     testReturn(original);
 }
 </code-block>
-
-&nbsp;
-<note-block>The call function is required for the modified return to work !</note-block>
-<p></p>
-<p>And the function would look like this after the modification:</p>
+<note-block class="mb-4">
+  The mixin method (<code-field>testReturn</code-field>) must have a <strong>unique name</strong> that does not exist in the target class.
+  Otherwise, the injection will not work.
+</note-block>
+<note-block class="mb-4">
+  The call function (<code-field>testReturnCall</code-field>) is required for the modified return to work!
+</note-block>
+<p class="text-lg font-bold">After mixins applied:</p>
 <code-block language="haxe">
 public function test() {
 -    return original + 10;
@@ -283,7 +316,7 @@ public function test() {
 }
 </code-block>
 <p>If you need to modify the receiver of that invocation here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-<code-block language="haxe">
+<code-block class="mb-2" language="haxe">
 @:ModifyReceiver(method = "test", call = testRecCall, target = "Test.setX")
 function testRec(receiver:Test, newX:Int) {
     if (newX == 1) {
@@ -296,11 +329,14 @@ function testRecCall(receiver:Test, newX:Int) {
     testRec(receiver, newX);
 }
 </code-block>
-
-&nbsp;
-<note-block>The call function is required for the modified receiver to work !</note-block>
-<p></p>
-<p>And the function would look like this after the modification:</p>
+<note-block class="mb-4">
+  The mixin method (<code-field>testRec</code-field>) must have a <strong>unique name</strong> that does not exist in the target class.
+  Otherwise, the injection will not work.
+</note-block>
+<note-block class="mb-4">
+  The call function (<code-field>testRecCall</code-field>) is required for the modified return to work!
+</note-block>
+<p class="text-lg font-bold">After mixins applied:</p>
 <code-block language="haxe">
 public function test() {
 -    Test.setX(1);
@@ -328,7 +364,7 @@ public function test() {
 }
 </code-block>
 <p>If you need to modify the return call of that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-<code-block language="haxe">
+<code-block class="mb-2" language="haxe">
 @:ModifyExpression(method = "test", call = testExprCall, target = true, ordinal = 0)
 function testExpr(original:Bool) {
     return false;
@@ -338,11 +374,14 @@ function testExprCall(original:Bool) {
     testExpr(original);
 }
 </code-block>
-
-&nbsp;
-<note-block>The call function is required for the modified expression to work !</note-block>
-<p></p>
-<p>And the function would look like this after the modification:</p>
+<note-block class="mb-4">
+  The mixin method (<code-field>testExpr</code-field>) must have a <strong>unique name</strong> that does not exist in the target class.
+  Otherwise, the injection will not work.
+</note-block>
+<note-block class="mb-4">
+  The call function (<code-field>testExprCall</code-field>) is required for the modified return to work!
+</note-block>
+<p class="text-lg font-bold">After mixins applied:</p>
 <code-block language="haxe">
 public function test() {
 -    if (true) trace(true);
@@ -610,6 +649,55 @@ class TargetClassMixin extends ScriptedModule {
         }
     ];
 
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebarClose = document.getElementById('sidebar-close');
+    const sidebarEl = document.querySelector('aside');
+    const content = document.getElementById('content');
+    const overlay = document.getElementById('sidebar-overlay');
+    const sidebarToggleWrapper = document.getElementById('sidebar-toggle-wrapper');
+
+    function openSidebar() {
+        if (window.innerWidth < 768) sidebarEl.classList.remove('-translate-y-full');
+        else sidebarEl.classList.remove('-translate-x-full');
+
+        if (window.innerWidth < 1280) overlay.classList.remove('hidden');
+        sidebarToggleWrapper.classList.remove('opacity-100', 'scale-100');
+        sidebarToggleWrapper.classList.add('opacity-0', 'scale-75');
+    }
+
+    function closeSidebar() {
+        if (window.innerWidth < 768) sidebarEl.classList.add('-translate-y-full');
+        else sidebarEl.classList.add('-translate-x-full');
+
+        overlay.classList.add('hidden');
+        sidebarToggleWrapper.classList.remove('opacity-0', 'scale-75');
+        sidebarToggleWrapper.classList.add('opacity-100', 'scale-100');
+    }
+
+    sidebarToggle.addEventListener('click', openSidebar);
+    sidebarClose.addEventListener('click', closeSidebar);
+
+    function initializeSidebar() {
+        if (window.innerWidth >= 1280) { // xl breakpoint - desktop
+            sidebarEl.classList.remove('-translate-x-full', '-translate-y-full');
+            sidebarEl.classList.add('flex'); // ensure it's visible
+        } else if (window.innerWidth >= 768) { // md to xl - tablet
+            sidebarEl.classList.remove('-translate-y-full');
+            sidebarEl.classList.add('-translate-x-full'); // start closed
+        } else { // mobile - smaller than md
+            sidebarEl.classList.remove('-translate-x-full');
+            sidebarEl.classList.add('-translate-y-full'); // start closed
+        }
+
+        // Ensure overlay hidden if not mobile
+        overlay.classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeSidebar);
+    window.addEventListener('load', initializeSidebar);
+    window.addEventListener('resize', initializeSidebar);
+
     // Populate sidebar with entries
     const links = {};
     const flatEntries = [];
@@ -691,16 +779,16 @@ class TargetClassMixin extends ScriptedModule {
             if (sub) html += `<h2 class="text-2xl font-bold mt-10 mb-3">${sub.title}</h2>${sub.content}`;
         }
 
-        html += `<div class="flex justify-center mt-8 md:mx-10 gap-4">
-            <button id="prevSection" class="flex-1 flex flex-col items-start min-w-0 border border-slate-600 hover:border-blue-500 py-2 px-4 rounded-xl hover:cursor-pointer disabled:opacity-0">
-                <span class="text-sm font-semibold">← Previous</span>
-                <span id="prevId" class="text-blue-500 mt-1 truncate block max-w-full"></span>
-            </button>
-            <button id="nextSection" class="flex-1 flex flex-col items-end min-w-0 border border-slate-600 hover:border-blue-500 py-2 px-4 rounded-xl hover:cursor-pointer disabled:opacity-0">
-                <span class="text-sm font-semibold">Next →</span>
-                <span id="nextId" class="text-blue-500 mt-1 truncate block max-w-full"></span>
-            </button>
-        </div>`;
+        html += `<div id="bottom-nav" class="flex justify-center md:gap-4 fixed bottom-0 left-0 right-0 md:border-0 border-t md:bg-transparent border-slate-600 bg-slate-800/50 backdrop-blur-md p-1 rounded-lg md:p-3 md:static md:bg-transparent md:mt-8 md:mx-10 md:mb-0 pb-safe transition-opacity duration-500 ease-in-out">
+    <button id="prevSection" class="flex-1 flex flex-col items-start min-w-0 md:border border-r border-slate-600 hover:border-blue-500 py-2 px-4 md:rounded-xl hover:cursor-pointer disabled:opacity-0">
+        <span class="text-sm font-semibold">← Previous</span>
+        <span id="prevId" class="text-blue-500 mt-1 truncate block max-w-full"></span>
+    </button>
+    <button id="nextSection" class="flex-1 flex flex-col items-end min-w-0 md:border border-l border-slate-600 hover:border-blue-500 py-2 px-4 md:rounded-xl hover:cursor-pointer disabled:opacity-0">
+        <span class="text-sm font-semibold">Next →</span>
+        <span id="nextId" class="text-blue-500 mt-1 truncate block max-w-full"></span>
+    </button>
+</div>`;
 
         content.innerHTML = html;
 
@@ -778,6 +866,48 @@ class TargetClassMixin extends ScriptedModule {
     // Load entry when hash changes
     window.addEventListener('hashchange', () => loadEntry(window.location.hash.substring(1)));
     if (window.location.hash) loadEntry(window.location.hash.substring(1));
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+
+    // Hide UI for readability
+    const uiElements = [sidebarToggleWrapper, document.getElementById('bottom-nav')];
+    let hideTimeout;
+
+    function showUI() {
+        uiElements.forEach(el => {
+            if (!el) return;
+            if (el.id === 'bottom-nav' && window.innerWidth >= 768) return;
+            if (el) el.classList.remove('opacity-0', 'pointer-events-none', 'scale-75');
+            if (el) el.classList.add('opacity-100', 'scale-100');
+        });
+    }
+
+    function hideUI() {
+        uiElements.forEach(el => {
+            if (!el) return;
+            if (el.id === 'bottom-nav' && window.innerWidth >= 768) return;
+            if (el) el.classList.remove('opacity-100', 'scale-100');
+            if (el) el.classList.add('opacity-0', 'pointer-events-none', 'scale-75');
+        });
+    }
+
+    function resetHideTimer() {
+        const sidebarClosed = (window.innerWidth < 768)
+            ? sidebarEl.classList.contains('-translate-y-full')
+            : sidebarEl.classList.contains('-translate-x-full');
+        if (!sidebarClosed) return;
+
+        showUI();
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(() => {
+            hideUI();
+        }, 3000); // 3 seconds of inactivity
+    }
+
+    window.addEventListener('mousemove', resetHideTimer);
+    window.addEventListener('touchstart', resetHideTimer);
+    window.addEventListener('scroll', resetHideTimer);
+
+    resetHideTimer();
 </script>
 
 </body>
