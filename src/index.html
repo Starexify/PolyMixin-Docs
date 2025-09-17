@@ -159,13 +159,13 @@ public function test() {
 }
 </code-block>
 <p>If you need to overwrite that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
-<code-block language="haxe">
+<code-block class="mb-2" language="haxe">
 @:Overwrite(method = "test")
 function testOverwrite() {
     trace("Overwrote test()");
 }
 </code-block>
-<p>The function would look like this after the overwrite:</p>
+<p class="text-lg font-bold">After mixins applied:</p>
 <code-block language="haxe">
 public function test() {
 -    trace("test() called");
@@ -197,7 +197,7 @@ function testInject() {
     trace("Injected into test() at HEAD");
 }
  </code-block>
- <p>The function would look like this after the injection:</p>
+ <p class="text-lg font-bold">After mixins applied:</p>
  <code-block language="haxe">
 public function test() {
 +    trace("Injected into test() at HEAD");
@@ -220,7 +220,7 @@ function testInject() {
     trace("Injected into test() at RETURN");
 }
  </code-block>
- <p>The function would look like this after the injection:</p>
+ <p class="text-lg font-bold">After mixins applied:</p>
  <code-block language="haxe">
 public function test() {
     doSomething();
@@ -246,7 +246,7 @@ function testInject() {
     trace("Injected into test() before doSomething()");
 }
  </code-block>
- <p>The function would look like this after the injection:</p>
+ <p class="text-lg font-bold">After mixins applied:</p>
  <code-block language="haxe">
 public function test() {
     trace("test() called");
@@ -407,7 +407,7 @@ function newTest() {
     trace("newTest() function injected");
 }
 </code-block>
-<p>The class would now have this function and can be used:</p>
+<p class="text-lg font-bold">After mixins applied, the class will now have this function available:</p>
 <code-block language="haxe">
 function newTest() {
     trace("newTest() function injected");
