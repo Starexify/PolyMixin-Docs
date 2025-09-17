@@ -25,21 +25,44 @@ export class CodeBlock extends HTMLElement {
         const code = document.createElement('code');
         code.className = `block text-gray-100`;
 
-        // Split code into lines and add line numbers
+        // Split code into lines and process diff highlighting
         const lines = text.split('\n');
         const maxLineNumber = lines.length;
         const lineNumberWidth = maxLineNumber.toString().length;
 
-        // Generate line numbers
-        const lineNumbersHtml = lines.map((_, index) => {
+        // Generate line numbers with diff highlighting
+        const lineNumbersHtml = lines.map((line, index) => {
             const lineNum = (index + 1).toString().padStart(lineNumberWidth, ' ');
-            return `<div class="leading-relaxed">${lineNum}</div>`;
+            let numberClass = 'leading-relaxed';
+
+            if (line.startsWith('+')) {
+                numberClass += ' bg-green-900/30';
+            } else if (line.startsWith('-')) {
+                numberClass += ' bg-red-900/30';
+            }
+
+            return `<div class="${numberClass}">${lineNum}</div>`;
         }).join('');
         lineNumbers.innerHTML = lineNumbersHtml;
 
-        // Apply custom syntax highlighting
-        const highlightedCode = SyntaxHighlighter.highlightCode(text, language);
-        code.innerHTML = highlightedCode;
+        // Process lines with diff highlighting
+        const processedLines = lines.map(line => {
+            let processedLine = line;
+            let lineClasses = '';
+
+            if (line.startsWith('+')) {
+                processedLine = line.substring(1);
+                lineClasses = 'bg-green-900/20 border-l-2 border-green-500';
+            } else if (line.startsWith('-')) {
+                processedLine = line.substring(1);
+                lineClasses = 'bg-red-900/20 border-l-2 border-red-500';
+            }
+
+            // Wrap line in a span, not a div
+            return `<span class="${lineClasses}">${SyntaxHighlighter.highlightCode(processedLine, language)}</span>\n`;
+        });
+
+        code.innerHTML = processedLines.join('');
 
         pre.appendChild(code);
         codeContainer.appendChild(pre);
@@ -59,8 +82,15 @@ export class CodeBlock extends HTMLElement {
         this.innerHTML = '';
         this.appendChild(container);
 
-        // Add copy button
-        this.addCopyButton(container, text);
+        // Add copy button (copy original text without diff markers)
+        const originalTextForCopy = lines.map(line => {
+            if (line.startsWith('+') || line.startsWith('-')) {
+                return line.substring(1);
+            }
+            return line;
+        }).join('\n');
+
+        this.addCopyButton(container, originalTextForCopy);
     }
 
     addCopyButton(container, originalText) {

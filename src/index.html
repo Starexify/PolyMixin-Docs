@@ -127,6 +127,7 @@ override public function onCreate(event:ScriptEvent) {
 <code-block language="haxe">
 public function test() {
     trace("test() called");
+    trace("test() called twice");
 }
 </code-block>
 <p>If you need to overwrite that function here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
@@ -134,6 +135,14 @@ public function test() {
 @:Overwrite(method = "test")
 function testOverwrite() {
     trace("Overwrote test()");
+}
+</code-block>
+<p>The function would look like this after the overwrite:</p>
+<code-block language="haxe">
+public function test() {
+-    trace("test() called");
+-    trace("test() called twice");
++    trace("Overwrote test()");
 }
 </code-block>
 </div>`
@@ -163,7 +172,7 @@ function testInject() {
  <p>The function would look like this after the injection:</p>
  <code-block language="haxe">
 public function test() {
-    trace("Injected into test() at HEAD");
++    trace("Injected into test() at HEAD");
     trace("test() called");
 }
  </code-block>
@@ -187,7 +196,7 @@ function testInject() {
  <code-block language="haxe">
 public function test() {
     doSomething();
-    trace("Injected into test() at RETURN");
++    trace("Injected into test() at RETURN");
     return trace("Test Return");
 }
  </code-block>
@@ -213,7 +222,7 @@ function testInject() {
  <code-block language="haxe">
 public function test() {
     trace("test() called");
-    trace("Injected into test() before doSomething()");
++    trace("Injected into test() before doSomething()");
     doSomething();
     doSomething();
     trace("test() called x2");
@@ -251,14 +260,57 @@ function testReturnCall(original:Int) {
 </code-block>
 
 &nbsp;
-<note-block>The Call function is required for the modified return to work !</note-block>
+<note-block>The call function is required for the modified return to work !</note-block>
 <p></p>
 <p>And the function would look like this after the modification:</p>
 <code-block language="haxe">
 public function test() {
-    return testReturnCall(20 + 10);
+-    return original + 10;
++    return testReturnCall(20 + 10);
 }
 </code-block>
+</div>`
+                },
+                {
+                    id: 'modify-receiver',
+                    title: '@:ModifyReceiver',
+                    content: `<div class="flex flex-col gap-2">
+<p>There are many ways to modify the receiver of a method invocation using mixins, and one of them is by using the <code-field>@:ModifyReceiver</code-field> annotation.</p>
+<p>Let's take for example the following snippet of a script:</p>
+<code-block language="haxe">
+public function test() {
+    Test.setX(1);
+}
+</code-block>
+<p>If you need to modify the receiver of that invocation here is an example of what you can write in your own <doc-link href="#examples:mixin-class" target-off>Mixin Class</doc-link>:</p>
+<code-block language="haxe">
+@:ModifyReceiver(method = "test", call = testRecCall, target = "Test.setX")
+function testRec(receiver:Test, newX:Int) {
+    if (newX == 1) {
+        return TestMixin;
+    }
+    return receiver;
+}
+
+function testRecCall(receiver:Test, newX:Int) {
+    testRec(receiver, newX);
+}
+</code-block>
+
+&nbsp;
+<note-block>The call function is required for the modified receiver to work !</note-block>
+<p></p>
+<p>And the function would look like this after the modification:</p>
+<code-block language="haxe">
+public function test() {
+-    Test.setX(1);
++    testRec(Test, 1).setX(1);
+}
+</code-block>
+<tip-block>
+  Injection behavior depends on the annotation parameters you use.
+  <p class="text-gray-400 text-sm">See <doc-link href="#injection-params" target-off>Injection Parameters</doc-link> for more information.</p>
+</tip-block>
 </div>`
                 },
                 {
@@ -288,12 +340,13 @@ function testExprCall(original:Bool) {
 </code-block>
 
 &nbsp;
-<note-block>The Call function is required for the modified expression to work !</note-block>
+<note-block>The call function is required for the modified expression to work !</note-block>
 <p></p>
 <p>And the function would look like this after the modification:</p>
 <code-block language="haxe">
 public function test() {
-    if (testExprCall(testExpr(true))) trace(true);
+-    if (true) trace(true);
++    if (testExprCall(testExpr(true))) trace(true);
     if (false) trace(false);
     if (true) trace("true x2");
     if (true) trace("true x3");
@@ -390,7 +443,8 @@ function newTest() {
 <data-table class="mb-4"
     data-headers="Method,Parameters,Description"
     data-json='[
-        ["modifyByName()", "targetInstance, targetFuncName, sourceInstance, sourceFuncName, callFuncName, at, ?target, ?ordinal", "Wraps return values or expressions with mixin function calls. Uses empty recall template to modify specific parts like return statements (At.RETURN) or expressions (At.INVOKE)."],
+        ["modifyByRecName()", "targetInstance, targetFuncName, sourceInstance, sourceFuncName, callFuncName, at, ?target, ?ordinal", "Wraps the receiver of method calls with a mixin function call. Only supports injection at method invocations (At.INVOKE)."],
+        ["modifyByName()", "targetInstance, targetFuncName, sourceInstance, sourceFuncName, callFuncName, at, ?target, ?ordinal", "Wraps return values or expressions with a mixin function call. Uses empty recall template to modify specific parts like return statements (At.RETURN) or expressions (At.INVOKE)."],
         ["injectByName()", "targetInstance, targetFuncName, sourceInstance, sourceFuncName, at, ?target, ?ordinal, ?shift", "Injects source function contents into target function at specified locations: HEAD (start), TAIL (end), RETURN (before returns), or INVOKE (around method calls)."],
         ["injectFunction()", "targetInstance, sourceInstance, sourceFuncName", "Copies a complete function from source to target instance, adding it to both function cache and AST as if originally declared there."],
         ["overwrite()", "targetInstance, targetFuncName, sourceInstance, sourceFuncName", "Completely replaces target function body with source function, making them identical in functionality."]
